@@ -344,8 +344,8 @@ async function gerarRIDOficialComBrasao() {
     ridElement.innerHTML = `
       <div style="text-align:center; margin-bottom:15px;">
         <img src="brasaodarepublica.png" style="width:75px; height:auto; margin-bottom:6px;" alt="Brasão da República">
-        <h3 style="margin:2px; color:#004d2d; font-size:15px; font-weight:bold;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
-        <h4 style="margin:2px; color:#006b3f; font-size:13px; font-weight:bold;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
+        <h3 style="margin:2px; font-size:15px; font-weight:bold;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
+        <h4 style="margin:2px; font-size:13px; font-weight:bold;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
         <h5 style="margin:2px; font-size:11px; font-weight:bold;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
       </div>
       <hr style="border:0.5px solid #006b3f; margin-bottom:15px;">
