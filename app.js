@@ -1,4 +1,4 @@
-// Catálogo Oficial da Resolução 49/CONSUNI/UFFS
+// Catálogo com itens parametrizados da Resolução 49/CONSUNI/UFFS
 const catalogoRID = [
   // ENSINO
   { id: "1_1_1", cod: "1.1.1.", desc: "Ministração de Componente Curricular na Graduação", fator: 2.5, unit: "pontos/15h", cat: "ensino", calc: "horas" },
@@ -34,24 +34,29 @@ const catalogoRID = [
   { id: "5_1_12", cod: "5.1.12.", desc: "Membro de comissão instituída por ato administrativo", fator: 5.0, unit: "pontos/semestre", cat: "gestao" }
 ];
 
-// Estado dos itens selecionados
 let atividadesSelecionadas = [];
 
-window.onload = function() {
-  popularSelects();
+// Executa garantindo que todo o HTML já foi renderizado no navegador
+document.addEventListener("DOMContentLoaded", function() {
+  popularTodosOsSelects();
   renderizarTodasAsTabelas();
-};
+});
 
-function popularSelects() {
+function popularTodosOsSelects() {
   const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao"];
   
   categorias.forEach(cat => {
     const select = document.getElementById(`select-${cat}`);
-    if (!select) return;
-    
-    const itensCat = catalogoRID.filter(i => i.cat === cat);
-    select.innerHTML = `<option value="">-- Selecione uma atividade de ${cat} --</option>` +
-      itensCat.map(i => `<option value="${i.id}">[${i.cod}] ${i.desc} (${i.fator} ${i.unit})</option>`).join('');
+    if (select) {
+      const itensCat = catalogoRID.filter(i => i.cat === cat);
+      let optionsHTML = `<option value="">-- Selecione uma atividade de ${cat.toUpperCase()} --</option>`;
+      
+      itensCat.forEach(item => {
+        optionsHTML += `<option value="${item.id}">[${item.cod}] ${item.desc} (${item.fator} ${item.unit})</option>`;
+      });
+      
+      select.innerHTML = optionsHTML;
+    }
   });
 }
 
@@ -59,15 +64,17 @@ function adicionarAtividade(cat) {
   const select = document.getElementById(`select-${cat}`);
   const qtdInput = document.getElementById(`qtd-${cat}`);
 
+  if (!select || !qtdInput) return;
+
   const itemId = select.value;
   const qtd = parseFloat(qtdInput.value);
 
   if (!itemId) {
-    alert("Selecione uma atividade válida.");
+    alert("Por favor, selecione uma atividade na lista.");
     return;
   }
   if (isNaN(qtd) || qtd <= 0) {
-    alert("Informe uma quantidade ou carga horária válida maior que zero.");
+    alert("Por favor, informe uma quantidade válida maior que zero.");
     return;
   }
 
@@ -125,15 +132,15 @@ function renderizarTabelaCategoria(cat) {
   }
 
   let html = `
-    <table class="table table-bordered table-sm table-hover">
+    <table class="table table-bordered table-sm table-hover mt-3">
       <thead class="thead-light">
         <tr>
           <th style="width: 40%">Atividade</th>
           <th style="width: 15%">Fator</th>
           <th style="width: 10%">Qtd/Horas</th>
           <th style="width: 10%">Pontos</th>
-          <th style="width: 20%">Comprovante PDF</th>
-          <th style="width: 5%">Excluir</th>
+          <th style="width: 20%">Comprovante (PDF)</th>
+          <th style="width: 5%">Ação</th>
         </tr>
       </thead>
       <tbody>
@@ -176,11 +183,13 @@ function calcularTotais() {
   if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
 }
 
-// CORREÇÃO DA GERAÇÃO DE PDF E MESCLAGEM DOS COMPROVANTES
+// Função de Geração e Fusão do PDF
 async function gerarRIDCompletoComComprovantes() {
   const btn = document.getElementById("btn-gerar-pdf");
-  btn.disabled = true;
-  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando PDF...`;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando PDF...`;
+  }
 
   try {
     const { PDFDocument } = PDFLib;
@@ -189,7 +198,6 @@ async function gerarRIDCompletoComComprovantes() {
     const nomeDocente = document.getElementById("nome_civil").value || "Docente";
     const siape = document.getElementById("siape").value || "---";
 
-    // 1. Criação da folha de resumo RID
     const ridElement = document.createElement("div");
     ridElement.style.padding = "30px";
     ridElement.style.fontFamily = "Arial, sans-serif";
@@ -238,7 +246,6 @@ async function gerarRIDCompletoComComprovantes() {
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
 
-    // 2. Anexação dos Comprovantes PDF carregados
     for (const item of atividadesSelecionadas) {
       if (item.arquivoPDF) {
         const fileBuffer = await item.arquivoPDF.arrayBuffer();
@@ -247,12 +254,11 @@ async function gerarRIDCompletoComComprovantes() {
           const paginasAnexo = await pdfFinal.copyPages(docAnexo, docAnexo.getPageIndices());
           paginasAnexo.forEach(p => pdfFinal.addPage(p));
         } catch (e) {
-          console.error("Erro ao mesclar PDF anexo:", e);
+          console.error("Erro ao mesclar PDF:", e);
         }
       }
     }
 
-    // 3. Download do PDF final mesclado
     const pdfBytes = await pdfFinal.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
@@ -261,9 +267,11 @@ async function gerarRIDCompletoComComprovantes() {
     link.click();
 
   } catch (err) {
-    alert("Ocorreu um erro ao gerar o PDF: " + err.message);
+    alert("Erro ao gerar PDF: " + err.message);
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID + Comprovantes PDF`;
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID + Comprovantes PDF`;
+    }
   }
 }
