@@ -4,9 +4,8 @@ const categoriasRID = [
   { id: "pesquisa", nome: "2. ATIVIDADES DE PESQUISA" },
   { id: "extensao", nome: "3. ATIVIDADES DE EXTENSÃO" },
   { id: "formacao", nome: "4. ATIVIDADES DE FORMAÇÃO" },
-  { id: "gestao", nome: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" },
-  { id: "didatico", nome: "6. PRODUÇÃO INTEL. E MATERIAL DIDÁTICO/PEDAGÓGICO" }
-];
+  { id: "gestao", nome: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" }
+ ];
 
 // Catálogo com itens parametrizados da Resolução 239/CONSUNI/UFFS/2026
 const catalogoRID = [
