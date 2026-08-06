@@ -249,11 +249,18 @@ function calcularTotais() {
 
 // GERAÇÃO DO RID OFICIAL
 async function gerarRIDOficialComBrasao() {
+  if (atividadesSelecionadas.length === 0) {
+    alert("Adicione pelo menos uma atividade antes de gerar o relatório!");
+    return;
+  }
+
   const btn = document.getElementById("btn-gerar-pdf");
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processando PDF e Páginas...`;
   }
+
+  let ridElement = null;
 
   try {
     const { PDFDocument } = PDFLib;
@@ -286,7 +293,10 @@ async function gerarRIDOficialComBrasao() {
       itensComPagina.push({ ...item, paginaInfo: paginaInicio });
     }
 
-    const ridElement = document.createElement("div");
+    ridElement = document.createElement("div");
+    ridElement.style.position = "absolute";
+    ridElement.style.left = "-9999px";
+    ridElement.style.top = "0";
     ridElement.style.width = "750px";
     ridElement.style.padding = "0px";
     ridElement.style.margin = "0px";
@@ -316,7 +326,7 @@ async function gerarRIDOficialComBrasao() {
             ${grupo.titulo}
           </h4>
       `;
-      
+
       if (itensDoGrupo.length === 0) {
         tabelasGruposHtml += `<p style="font-style:italic; color:#777; margin:2px 0 8px 5px; font-size:9.5px;">Nenhuma atividade declarada neste grupo.</p>`;
       } else {
@@ -400,6 +410,9 @@ async function gerarRIDOficialComBrasao() {
       </div>
     `;
 
+    // Inserção temporária no DOM para renderização CSS do html2pdf
+    document.body.appendChild(ridElement);
+
     const opt = {
       margin: [10, 10, 10, 10],
       filename: `RID_OFICIAL_${siape}.pdf`,
@@ -437,6 +450,10 @@ async function gerarRIDOficialComBrasao() {
   } catch (err) {
     alert("Erro ao gerar RID oficial: " + err.message);
   } finally {
+    // Remoção limpa do DOM
+    if (ridElement && ridElement.parentNode) {
+      ridElement.parentNode.removeChild(ridElement);
+    }
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID Oficial + Comprovantes PDF`;
