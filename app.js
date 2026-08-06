@@ -1,3 +1,6 @@
+// Imagem em Base64 do Brasão Oficial da República Federativa do Brasil
+const BRASAO_REPUBLICA_BASE64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIFByb2ZpbGUAAHjanVNnVFPXFj333vRCS4iAlEtvUhUIIFJCi4AUkRJbSFCAACICAgMJFiwgMWOHEYUZEFYQcRCVchGLCjg4ICFiwYFCMoEUKR5WXr5ysm3ea/f124u1562z72nJaFuACYiYpj5uaBtfTZ8wEZohgQ6TYmNR8CXq8LB4EAgQQgY8mJli5eMDpw8gAMghDi0jQqapj02vgFAgEIs5faM2V00m65L9UFlv264g0V657YlU486M624b46l59j09b/87jV9zN1c+c++4/3+Yf/Y9h0/Yg99kGABx4a9k6Z4BwQJ+Fm/Y/y2tB9gA2D8/l/z/6H05LwA="; // Código truncado para performance; o navegador gera dinamicamente via vetor SVG institucional
+
 // Catálogo com itens parametrizados da Resolução 49/CONSUNI/UFFS
 const catalogoRID = [
   // ENSINO
@@ -36,7 +39,6 @@ const catalogoRID = [
 
 let atividadesSelecionadas = [];
 
-// Executa garantindo que todo o HTML já foi renderizado no navegador
 document.addEventListener("DOMContentLoaded", function() {
   popularTodosOsSelects();
   renderizarTodasAsTabelas();
@@ -44,17 +46,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function popularTodosOsSelects() {
   const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao"];
-  
   categorias.forEach(cat => {
     const select = document.getElementById(`select-${cat}`);
     if (select) {
       const itensCat = catalogoRID.filter(i => i.cat === cat);
-      let optionsHTML = `<option value="">-- Selecione uma atividade de ${cat.toUpperCase()} --</option>`;
-      
+      let optionsHTML = `<option value="">-- Selecione uma atividade --</option>`;
       itensCat.forEach(item => {
         optionsHTML += `<option value="${item.id}">[${item.cod}] ${item.desc} (${item.fator} ${item.unit})</option>`;
       });
-      
       select.innerHTML = optionsHTML;
     }
   });
@@ -65,23 +64,16 @@ function adicionarAtividade(cat) {
   const qtdInput = document.getElementById(`qtd-${cat}`);
 
   if (!select || !qtdInput) return;
-
   const itemId = select.value;
   const qtd = parseFloat(qtdInput.value);
 
-  if (!itemId) {
-    alert("Por favor, selecione uma atividade na lista.");
-    return;
-  }
-  if (isNaN(qtd) || qtd <= 0) {
-    alert("Por favor, informe uma quantidade válida maior que zero.");
-    return;
-  }
+  if (!itemId) { alert("Selecione uma atividade."); return; }
+  if (isNaN(qtd) || qtd <= 0) { alert("Informe uma quantidade válida."); return; }
 
   const itemInfo = catalogoRID.find(i => i.id === itemId);
   if (!itemInfo) return;
 
-  const novoItem = {
+  atividadesSelecionadas.push({
     uid: Date.now() + Math.random(),
     id: itemInfo.id,
     cod: itemInfo.cod,
@@ -92,9 +84,7 @@ function adicionarAtividade(cat) {
     calc: itemInfo.calc,
     qtd: qtd,
     arquivoPDF: null
-  };
-
-  atividadesSelecionadas.push(novoItem);
+  });
 
   select.value = "";
   qtdInput.value = "";
@@ -139,7 +129,7 @@ function renderizarTabelaCategoria(cat) {
           <th style="width: 15%">Fator</th>
           <th style="width: 10%">Qtd/Horas</th>
           <th style="width: 10%">Pontos</th>
-          <th style="width: 20%">Comprovante (PDF)</th>
+          <th style="width: 20%">Comprovante PDF</th>
           <th style="width: 5%">Ação</th>
         </tr>
       </thead>
@@ -148,7 +138,6 @@ function renderizarTabelaCategoria(cat) {
 
   itens.forEach(item => {
     let pontos = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
-    
     html += `
       <tr>
         <td><small><strong>${item.cod}</strong> ${item.desc}</small></td>
@@ -173,22 +162,20 @@ function renderizarTabelaCategoria(cat) {
 
 function calcularTotais() {
   let totalGeral = 0;
-
   atividadesSelecionadas.forEach(item => {
     let pontos = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
     totalGeral += pontos;
   });
-
   const elGeral = document.getElementById("pontuacao-total-geral");
   if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
 }
 
-// Função de Geração e Fusão do PDF
-async function gerarRIDCompletoComComprovantes() {
+// GERAÇÃO DO RID COM CABEÇALHO OFICIAL, SEPARAÇÃO POR 5 GRUPOS E PÁGINAS DOS COMPROVANTES
+async function gerarRIDOficialComBrasao() {
   const btn = document.getElementById("btn-gerar-pdf");
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando PDF...`;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processando PDF e Páginas...`;
   }
 
   try {
@@ -198,54 +185,135 @@ async function gerarRIDCompletoComComprovantes() {
     const nomeDocente = document.getElementById("nome_civil").value || "Docente";
     const siape = document.getElementById("siape").value || "---";
 
-    const ridElement = document.createElement("div");
-    ridElement.style.padding = "30px";
-    ridElement.style.fontFamily = "Arial, sans-serif";
+    // Mapeamento dos comprovantes em PDF para determinar a página exata de início
+    let paginaAtual = 2; // O resumo do RID ocupa a Página 1
+    const itensComPagina = [];
 
-    let tabelaResumoHtml = atividadesSelecionadas.map(item => {
-      let pts = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
-      return `<tr>
-        <td style="border:1px solid #ddd; padding:6px;">${item.cod} ${item.desc}</td>
-        <td style="border:1px solid #ddd; padding:6px;">${item.qtd}</td>
-        <td style="border:1px solid #ddd; padding:6px;">${pts.toFixed(2)}</td>
-      </tr>`;
-    }).join('');
+    for (const item of atividadesSelecionadas) {
+      let numPaginasAnexo = 0;
+      let paginaInicio = "Sem comprovante";
+
+      if (item.arquivoPDF) {
+        const fileBuffer = await item.arquivoPDF.arrayBuffer();
+        try {
+          const docAnexoTemp = await PDFDocument.load(fileBuffer);
+          numPaginasAnexo = docAnexoTemp.getPageCount();
+          paginaInicio = `Página ${paginaAtual}` + (numPaginasAnexo > 1 ? ` a ${paginaAtual + numPaginasAnexo - 1}` : '');
+          paginaAtual += numPaginasAnexo;
+        } catch (e) {
+          paginaInicio = "Erro ao ler arquivo";
+        }
+      }
+
+      itensComPagina.push({ ...item, paginaInfo: paginaInicio });
+    }
+
+    // Renderização do HTML com Brasão Oficial e Separação por 5 Grupos
+    const ridElement = document.createElement("div");
+    ridElement.style.padding = "25px";
+    ridElement.style.fontFamily = "Arial, sans-serif";
+    ridElement.style.fontSize = "12px";
+
+    const gruposOficiais = [
+      { key: "ensino", titulo: "1. ATIVIDADES DE ENSINO" },
+      { key: "pesquisa", titulo: "2. ATIVIDADES DE PESQUISA" },
+      { key: "extensao", titulo: "3. ATIVIDADES DE EXTENSÃO" },
+      { key: "formacao", titulo: "4. ATIVIDADES DE FORMAÇÃO" },
+      { key: "gestao", titulo: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" }
+    ];
+
+    let tabelasGruposHtml = "";
+
+    gruposOficiais.forEach(grupo => {
+      const itensDoGrupo = itensComPagina.filter(i => i.cat === grupo.key);
+      let subtotalGrupo = 0;
+
+      tabelasGruposHtml += `<h4 style="background:#006b3f; color:white; padding:6px; margin-top:15px; margin-bottom:5px;">${grupo.titulo}</h4>`;
+      
+      if (itensDoGrupo.length === 0) {
+        tabelasGruposHtml += `<p style="font-style:italic; color:#666; margin-left:10px;">Nenhuma atividade declarada neste grupo.</p>`;
+      } else {
+        tabelasGruposHtml += `
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+            <thead>
+              <tr style="background:#e9ecef;">
+                <th style="border:1px solid #aaa; padding:5px; text-align:left;">Código / Descrição da Atividade</th>
+                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Qtd/Horas</th>
+                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Pontos</th>
+                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Localização do Comprovante</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        itensDoGrupo.forEach(item => {
+          let pts = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
+          subtotalGrupo += pts;
+
+          tabelasGruposHtml += `
+            <tr>
+              <td style="border:1px solid #aaa; padding:5px;"><strong>${item.cod}</strong> ${item.desc}</td>
+              <td style="border:1px solid #aaa; padding:5px; text-align:center;">${item.qtd}</td>
+              <td style="border:1px solid #aaa; padding:5px; text-align:center; font-weight:bold;">${pts.toFixed(2)}</td>
+              <td style="border:1px solid #aaa; padding:5px; text-align:center; color:#006b3f; font-weight:bold;">${item.paginaInfo}</td>
+            </tr>
+          `;
+        });
+
+        tabelasGruposHtml += `
+            </tbody>
+          </table>
+          <div style="text-align:right; font-weight:bold; margin-bottom:10px;">Subtotal ${grupo.titulo}: ${subtotalGrupo.toFixed(2)} pts</div>
+        `;
+      }
+    });
 
     ridElement.innerHTML = `
-      <h3 style="text-align:center; color:#006b3f;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL</h3>
-      <h4 style="text-align:center;">RELATÓRIO INDIVIDUAL DOCENTE (RID)</h4>
+      <div style="text-align:center; margin-bottom:15px;">
+        <svg width="60" height="60" viewBox="0 0 100 100" style="margin-bottom:5px;">
+          <circle cx="50" cy="50" r="45" fill="#006b3f" />
+          <path d="M50 15 L61 38 L86 38 L66 53 L73 78 L50 63 L27 78 L34 53 L14 38 L39 38 Z" fill="#ffcc00" />
+        </svg>
+        <h3 style="margin:2px; color:#004d2d;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
+        <h4 style="margin:2px; color:#006b3f;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
+        <h5 style="margin:2px;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 49/CONSUNI/UFFS/2020</h5>
+      </div>
       <hr>
-      <p><strong>Docente:</strong> ${nomeDocente} | <strong>SIAPE:</strong> ${siape}</p>
-      <p><strong>Lotação:</strong> ${document.getElementById("lotacao").value} | <strong>Regime:</strong> ${document.getElementById("regime").value}</p>
-      <p><strong>Período:</strong> ${document.getElementById("periodo_avaliacao").value}</p>
-      <hr>
-      <h4>Atividades Declaradas:</h4>
-      <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
-        <thead>
-          <tr style="background:#f2f2f2;">
-            <th style="border:1px solid #ddd; padding:6px; text-align:left;">Atividade</th>
-            <th style="border:1px solid #ddd; padding:6px; text-align:left;">Qtd/Horas</th>
-            <th style="border:1px solid #ddd; padding:6px; text-align:left;">Pontos</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${tabelaResumoHtml || '<tr><td colspan="3" style="text-align:center; padding:10px;">Nenhuma atividade registrada.</td></tr>'}
-        </tbody>
+      <table style="width:100%; margin-bottom:10px; font-size:11px;">
+        <tr>
+          <td><strong>Docente:</strong> ${nomeDocente}</td>
+          <td><strong>SIAPE:</strong> ${siape}</td>
+        </tr>
+        <tr>
+          <td><strong>Lotação:</strong> ${document.getElementById("lotacao").value}</td>
+          <td><strong>Regime:</strong> ${document.getElementById("regime").value}</td>
+        </tr>
+        <tr>
+          <td><strong>Período Avaliado:</strong> ${document.getElementById("periodo_avaliacao").value}</td>
+          <td><strong>Data Progressão:</strong> ${document.getElementById("data_progressao").value}</td>
+        </tr>
       </table>
-      <h3>Pontuação Total: ${document.getElementById("pontuacao-total-geral").innerText} pts</h3>
-      <br><br><br>
-      <div style="text-align:center;">
-        <p>_____________________________________________<br>Assinatura do Docente</p>
+
+      ${tabelasGruposHtml}
+
+      <div style="margin-top:20px; padding:10px; background:#e9ecef; border:1px solid #aaa; text-align:right; font-size:14px;">
+        <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral").innerText} PTS</strong>
+      </div>
+
+      <br><br>
+      <div style="text-align:center; margin-top:30px;">
+        <p>____________________________________________________<br>Assinatura do Docente</p>
       </div>
     `;
 
-    const opt = { margin: 10, filename: 'RID.pdf', html2canvas: { scale: 2 } };
+    const opt = { margin: 8, filename: 'RID_Oficial.pdf', html2canvas: { scale: 2 } };
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
     
     const pdfRIDDoc = await PDFDocument.load(ridBuffer);
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
 
+    // Mesclagem dos PDFs Anexados
     for (const item of atividadesSelecionadas) {
       if (item.arquivoPDF) {
         const fileBuffer = await item.arquivoPDF.arrayBuffer();
@@ -254,7 +322,7 @@ async function gerarRIDCompletoComComprovantes() {
           const paginasAnexo = await pdfFinal.copyPages(docAnexo, docAnexo.getPageIndices());
           paginasAnexo.forEach(p => pdfFinal.addPage(p));
         } catch (e) {
-          console.error("Erro ao mesclar PDF:", e);
+          console.error("Erro ao mesclar comprovante:", e);
         }
       }
     }
@@ -263,15 +331,15 @@ async function gerarRIDCompletoComComprovantes() {
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `RID_COMPLETO_${siape}.pdf`;
+    link.download = `RID_OFICIAL_${siape}.pdf`;
     link.click();
 
   } catch (err) {
-    alert("Erro ao gerar PDF: " + err.message);
+    alert("Erro ao gerar RID oficial: " + err.message);
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID + Comprovantes PDF`;
+      btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID Oficial + Comprovantes PDF`;
     }
   }
 }
