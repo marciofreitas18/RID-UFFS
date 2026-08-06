@@ -7,7 +7,7 @@ const categoriasRID = [
   { id: "gestao", nome: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" }
 ];
 
-// Catálogo com itens parametrizados da Resolução 239/CONSUNI/UFFS/2026
+// Catálogo Parametrizado da Resolução 239/CONSUNI/UFFS/2026
 const catalogoRID = [
   // 1. ENSINO
   { id: "1_1_1", cod: "1.1.1.", desc: "Ministração de Componente Curricular na Graduação", fator: 2.5, unit: "pontos/15h", cat: "ensino", calc: "horas" },
@@ -74,10 +74,17 @@ const catalogoRID = [
 
 let atividadesSelecionadas = [];
 
-document.addEventListener("DOMContentLoaded", function() {
+// Inicialização DUPLA: Garante execução independentemente da ordem de carregamento do DOM
+function inicializarApp() {
   popularTodosOsSelects();
   renderizarTodasAsTabelas();
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", inicializarApp);
+} else {
+  inicializarApp();
+}
 
 function popularTodosOsSelects() {
   const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao"];
@@ -147,7 +154,7 @@ function editarAtividade(uid, cat) {
       renderizarTabelaCategoria(cat);
       calcularTotais();
     } else {
-      alert("Por favor, insira um valor numérico válido e maior que zero.");
+      alert("Por favor, insira um valor numérico válido maior que zero.");
     }
   }
 }
@@ -184,7 +191,7 @@ function renderizarTabelaCategoria(cat) {
     .sort((a, b) => compararCodigos(a.cod, b.cod));
 
   if (itens.length === 0) {
-    container.innerHTML = `<div class="alert alert-light text-center border text-muted">Nenhuma atividade adicionada nesta categoria.</div>`;
+    container.innerHTML = `<div class="alert alert-light text-center border text-muted my-2">Nenhuma atividade adicionada nesta categoria.</div>`;
     return;
   }
 
@@ -215,10 +222,10 @@ function renderizarTabelaCategoria(cat) {
           <input type="file" class="form-control-file form-control-sm" accept="application/pdf" onchange="salvarComprovante(${item.uid}, this)">
         </td>
         <td class="text-center">
-          <button class="btn btn-outline-primary btn-sm mr-1" onclick="editarAtividade(${item.uid}, '${cat}')" title="Editar quantidade">
+          <button class="btn btn-outline-primary btn-sm mr-1" onclick="editarAtividade(${item.uid}, '${cat}')" title="Editar">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="btn btn-outline-danger btn-sm" onclick="removerAtividade(${item.uid}, '${cat}')" title="Excluir atividade">
+          <button class="btn btn-outline-danger btn-sm" onclick="removerAtividade(${item.uid}, '${cat}')" title="Excluir">
             <i class="fas fa-trash"></i>
           </button>
         </td>
@@ -240,7 +247,7 @@ function calcularTotais() {
   if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
 }
 
-// GERAÇÃO DO RID COM BRASÃO DA REPÚBLICA E SEPARAÇÃO PELOS 5 GRUPOS OFICIAIS DA RES. 239/2026
+// GERAÇÃO DO RID OFICIAL
 async function gerarRIDOficialComBrasao() {
   const btn = document.getElementById("btn-gerar-pdf");
   if (btn) {
@@ -280,7 +287,6 @@ async function gerarRIDOficialComBrasao() {
     }
 
     const ridElement = document.createElement("div");
-    
     ridElement.style.width = "750px";
     ridElement.style.padding = "0px";
     ridElement.style.margin = "0px";
@@ -306,7 +312,7 @@ async function gerarRIDOficialComBrasao() {
 
       tabelasGruposHtml += `
         <div style="margin-top: 10px; page-break-inside: avoid;">
-          <h4 style="background:#006b3f; color:white; padding:4px 8px; margin:0 0 6px 0; font-size:11px; font-weight:bold; border-radius:2px;">
+          <h4 style="background:#00693E; color:white; padding:4px 8px; margin:0 0 6px 0; font-size:11px; font-weight:bold; border-radius:2px;">
             ${grupo.titulo}
           </h4>
       `;
@@ -335,7 +341,7 @@ async function gerarRIDOficialComBrasao() {
             <tr style="page-break-inside: avoid;">
               <td style="border:1px solid #bbb; padding:4px; word-wrap:break-word;"><strong>${item.cod}</strong> ${item.desc}</td>
               <td style="border:1px solid #bbb; padding:4px; text-align:center;">${item.qtd}</td>
-              <td style="border:1px solid #bbb; padding:4px; text-align:center; font-weight:bold; color:#006b3f;">${pts.toFixed(2)}</td>
+              <td style="border:1px solid #bbb; padding:4px; text-align:center; font-weight:bold; color:#00693E;">${pts.toFixed(2)}</td>
               <td style="border:1px solid #bbb; padding:4px; text-align:center; color:#444; font-size:9px;">${item.paginaInfo}</td>
             </tr>
           `;
@@ -345,7 +351,7 @@ async function gerarRIDOficialComBrasao() {
             </tbody>
           </table>
           <div style="text-align:right; font-weight:bold; margin-bottom:10px; font-size:10px;">
-            Subtotal ${grupo.titulo}: <span style="color:#006b3f;">${subtotalGrupo.toFixed(2)} pts</span>
+            Subtotal ${grupo.titulo}: <span style="color:#00693E;">${subtotalGrupo.toFixed(2)} pts</span>
           </div>
         `;
       }
@@ -356,12 +362,12 @@ async function gerarRIDOficialComBrasao() {
     ridElement.innerHTML = `
       <div style="text-align:center; margin:0 0 10px 0; padding:0;">
         <img src="brasaodarepublica.png" style="width:55px; height:auto; margin:0 auto 4px auto; display:block;" alt="Brasão da República">
-        <h3 style="margin:0; color:#004d2d; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.2;">República Federativa do Brasil</h3>
-        <h4 style="margin:2px 0 0 0; color:#006b3f; font-size:11px; font-weight:bold; text-transform:uppercase; line-height:1.2;">Universidade Federal da Fronteira Sul - UFFS</h4>
+        <h3 style="margin:0; color:#004D2D; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.2;">República Federativa do Brasil</h3>
+        <h4 style="margin:2px 0 0 0; color:#00693E; font-size:11px; font-weight:bold; text-transform:uppercase; line-height:1.2;">Universidade Federal da Fronteira Sul - UFFS</h4>
         <h5 style="margin:4px 0 0 0; font-size:10px; font-weight:bold; color:#333; line-height:1.2;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
       </div>
 
-      <hr style="border:0; border-top: 1.5px solid #006b3f; margin:8px 0 10px 0;">
+      <hr style="border:0; border-top: 1.5px solid #00693E; margin:8px 0 10px 0;">
 
       <div style="background-color:#f9f9f9; padding:8px 10px; border:1px solid #ddd; border-radius:3px; margin-bottom:10px; page-break-inside: avoid;">
         <table style="width:100%; font-size:9.5px; border-collapse:collapse;">
@@ -383,7 +389,7 @@ async function gerarRIDOficialComBrasao() {
       ${tabelasGruposHtml}
 
       <div style="margin-top:15px; page-break-inside: avoid;">
-        <div style="padding:8px 12px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:3px; text-align:right; font-size:11px; color:#1b5e20;">
+        <div style="padding:8px 12px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:3px; text-align:right; font-size:11px; color:#004D2D;">
           <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral")?.innerText || "0.00"} PTS</strong>
         </div>
 
@@ -404,7 +410,6 @@ async function gerarRIDOficialComBrasao() {
     };
 
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
-    
     const pdfRIDDoc = await PDFDocument.load(ridBuffer);
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
