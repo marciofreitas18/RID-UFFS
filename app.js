@@ -1,6 +1,3 @@
-// Imagem em Base64 do Brasão Oficial da República Federativa do Brasil
-const BRASAO_REPUBLICA_BASE64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIFByb2ZpbGUAAHjanVNnVFPXFj333vRCS4iAlEtvUhUIIFJCi4AUkRJbSFCAACICAgMJFiwgMWOHEYUZEFYQcRCVchGLCjg4ICFiwYFCMoEUKR5WXr5ysm3ea/f124u1562z72nJaFuACYiYpj5uaBtfTZ8wEZohgQ6TYmNR8CXq8LB4EAgQQgY8mJli5eMDpw8gAMghDi0jQqapj02vgFAgEIs5faM2V00m65L9UFlv264g0V657YlU486M624b46l59j09b/87jV9zN1c+c++4/3+Yf/Y9h0/Yg99kGABx4a9k6Z4BwQJ+Fm/Y/y2tB9gA2D8/l/z/6H05LwA="; // Código truncado para performance; o navegador gera dinamicamente via vetor SVG institucional
-
 // Catálogo com itens parametrizados da Resolução 49/CONSUNI/UFFS
 const catalogoRID = [
   // ENSINO
@@ -170,7 +167,7 @@ function calcularTotais() {
   if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
 }
 
-// GERAÇÃO DO RID COM CABEÇALHO OFICIAL, SEPARAÇÃO POR 5 GRUPOS E PÁGINAS DOS COMPROVANTES
+// GERAÇÃO DO RID COM BRASÃO DA REPÚBLICA LOCAL, SEPARAÇÃO POR 5 GRUPOS E PÁGINAS DOS COMPROVANTES
 async function gerarRIDOficialComBrasao() {
   const btn = document.getElementById("btn-gerar-pdf");
   if (btn) {
@@ -208,7 +205,7 @@ async function gerarRIDOficialComBrasao() {
       itensComPagina.push({ ...item, paginaInfo: paginaInicio });
     }
 
-    // Renderização do HTML com Brasão Oficial e Separação por 5 Grupos
+    // Renderização do HTML com Brasão da República Local e Separação por 5 Grupos
     const ridElement = document.createElement("div");
     ridElement.style.padding = "25px";
     ridElement.style.fontFamily = "Arial, sans-serif";
@@ -270,15 +267,12 @@ async function gerarRIDOficialComBrasao() {
 
     ridElement.innerHTML = `
       <div style="text-align:center; margin-bottom:15px;">
-        <svg width="60" height="60" viewBox="0 0 100 100" style="margin-bottom:5px;">
-          <circle cx="50" cy="50" r="45" fill="#006b3f" />
-          <path d="M50 15 L61 38 L86 38 L66 53 L73 78 L50 63 L27 78 L34 53 L14 38 L39 38 Z" fill="#ffcc00" />
-        </svg>
-        <h3 style="margin:2px; color:#004d2d;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
-        <h4 style="margin:2px; color:#006b3f;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
-        <h5 style="margin:2px;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 49/CONSUNI/UFFS/2020</h5>
+        <img src="brasaodarepublica.png" style="width:75px; height:auto; margin-bottom:6px;" alt="Brasão da República">
+        <h3 style="margin:2px; color:#004d2d; font-size:15px; font-weight:bold;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
+        <h4 style="margin:2px; color:#006b3f; font-size:13px; font-weight:bold;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
+        <h5 style="margin:2px; font-size:11px; font-weight:bold;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 49/CONSUNI/UFFS/2020</h5>
       </div>
-      <hr>
+      <hr style="border:0.5px solid #006b3f; margin-bottom:15px;">
       <table style="width:100%; margin-bottom:10px; font-size:11px;">
         <tr>
           <td><strong>Docente:</strong> ${nomeDocente}</td>
@@ -306,7 +300,7 @@ async function gerarRIDOficialComBrasao() {
       </div>
     `;
 
-    const opt = { margin: 8, filename: 'RID_Oficial.pdf', html2canvas: { scale: 2 } };
+    const opt = { margin: 8, filename: 'RID_Oficial.pdf', html2canvas: { scale: 2, useCORS: true } };
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
     
     const pdfRIDDoc = await PDFDocument.load(ridBuffer);
