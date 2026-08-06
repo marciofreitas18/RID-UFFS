@@ -5,7 +5,7 @@ const categoriasRID = [
   { id: "extensao", nome: "3. ATIVIDADES DE EXTENSÃO" },
   { id: "formacao", nome: "4. ATIVIDADES DE FORMAÇÃO" },
   { id: "gestao", nome: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" }
- ];
+];
 
 // Catálogo com itens parametrizados da Resolução 239/CONSUNI/UFFS/2026
 const catalogoRID = [
@@ -69,12 +69,7 @@ const catalogoRID = [
   { id: "5_1_7", cod: "5.1.7.", desc: "Coordenador de curso de graduação ou pós-graduação", fator: 30.0, unit: "pontos/semestre", cat: "gestao" },
   { id: "5_1_8", cod: "5.1.8.", desc: "Coordenador adjunto ou de subárea de programa acadêmico", fator: 15.0, unit: "pontos/semestre", cat: "gestao" },
   { id: "5_1_12", cod: "5.1.12.", desc: "Membro de comissão instituída por ato administrativo", fator: 5.0, unit: "pontos/semestre", cat: "gestao" },
-  { id: "5_1_13", cod: "5.1.13.", desc: "Membro do CONSUNI ou CÂMARAS FONTES", fator: 5.0, unit: "pontos/semestre", cat: "gestao" },
-
-  // 6. PRODUÇÃO INTEL. E MATERIAL DIDÁTICO/PEDAGÓGICO
-  { id: "6_1_1", cod: "6.1.1.", desc: "Elaboração de material didático impresso ou digital", fator: 3.0, unit: "pontos/unidade", cat: "didatico" },
-  { id: "6_1_2", cod: "6.1.2.", desc: "Desenvolvimento de softwares, guias ou recursos pedagógicos", fator: 4.0, unit: "pontos/unidade", cat: "didatico" },
-  { id: "6_1_3", cod: "6.1.3.", desc: "Registro de Propriedade Intelectual ou Patente", fator: 20.0, unit: "pontos/unidade", cat: "didatico" }
+  { id: "5_1_13", cod: "5.1.13.", desc: "Membro do CONSUNI ou CÂMARAS FONTES", fator: 5.0, unit: "pontos/semestre", cat: "gestao" }
 ];
 
 let atividadesSelecionadas = [];
@@ -85,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function popularTodosOsSelects() {
-  const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao", "didatico"];
+  const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao"];
   categorias.forEach(cat => {
     const select = document.getElementById(`select-${cat}`);
     if (select) {
@@ -139,6 +134,24 @@ function removerAtividade(uid, cat) {
   calcularTotais();
 }
 
+function editarAtividade(uid, cat) {
+  const item = atividadesSelecionadas.find(i => i.uid === uid);
+  if (!item) return;
+
+  const novaQtdStr = prompt(`Editar quantidade/horas para:\n"${item.cod} ${item.desc}"`, item.qtd);
+
+  if (novaQtdStr !== null) {
+    const novaQtd = parseFloat(novaQtdStr.replace(',', '.'));
+    if (!isNaN(novaQtd) && novaQtd > 0) {
+      item.qtd = novaQtd;
+      renderizarTabelaCategoria(cat);
+      calcularTotais();
+    } else {
+      alert("Por favor, insira um valor numérico válido e maior que zero.");
+    }
+  }
+}
+
 function salvarComprovante(uid, inputElement) {
   const item = atividadesSelecionadas.find(i => i.uid === uid);
   if (item && inputElement.files && inputElement.files[0]) {
@@ -147,14 +160,30 @@ function salvarComprovante(uid, inputElement) {
 }
 
 function renderizarTodasAsTabelas() {
-  ["ensino", "pesquisa", "extensao", "formacao", "gestao", "didatico"].forEach(cat => renderizarTabelaCategoria(cat));
+  ["ensino", "pesquisa", "extensao", "formacao", "gestao"].forEach(cat => renderizarTabelaCategoria(cat));
+}
+
+// Função para comparar códigos numéricos (ex: "1.1.1." vs "1.2.1.")
+function compararCodigos(codA, codB) {
+  const a = codA.replace(/\.$/, '').split('.').map(Number);
+  const b = codB.replace(/\.$/, '').split('.').map(Number);
+
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const valA = a[i] || 0;
+    const valB = b[i] || 0;
+    if (valA !== valB) return valA - valB;
+  }
+  return 0;
 }
 
 function renderizarTabelaCategoria(cat) {
   const container = document.getElementById(`tabela-${cat}`);
   if (!container) return;
 
-  const itens = atividadesSelecionadas.filter(i => i.cat === cat);
+  // Filtra e ordena automaticamente pelo código numérico
+  const itens = atividadesSelecionadas
+    .filter(i => i.cat === cat)
+    .sort((a, b) => compararCodigos(a.cod, b.cod));
 
   if (itens.length === 0) {
     container.innerHTML = `<div class="alert alert-light text-center border text-muted">Nenhuma atividade adicionada nesta categoria.</div>`;
@@ -165,12 +194,12 @@ function renderizarTabelaCategoria(cat) {
     <table class="table table-bordered table-sm table-hover mt-3">
       <thead class="thead-light">
         <tr>
-          <th style="width: 40%">Atividade</th>
+          <th style="width: 38%">Atividade</th>
           <th style="width: 15%">Fator</th>
-          <th style="width: 10%">Qtd/Horas</th>
+          <th style="width: 12%">Qtd/Horas</th>
           <th style="width: 10%">Pontos</th>
-          <th style="width: 20%">Comprovante PDF</th>
-          <th style="width: 5%">Ação</th>
+          <th style="width: 15%">Comprovante PDF</th>
+          <th style="width: 10%" class="text-center">Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -188,7 +217,10 @@ function renderizarTabelaCategoria(cat) {
           <input type="file" class="form-control-file form-control-sm" accept="application/pdf" onchange="salvarComprovante(${item.uid}, this)">
         </td>
         <td class="text-center">
-          <button class="btn btn-outline-danger btn-sm" onclick="removerAtividade(${item.uid}, '${cat}')">
+          <button class="btn btn-outline-primary btn-sm mr-1" onclick="editarAtividade(${item.uid}, '${cat}')" title="Editar quantidade">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-outline-danger btn-sm" onclick="removerAtividade(${item.uid}, '${cat}')" title="Excluir atividade">
             <i class="fas fa-trash"></i>
           </button>
         </td>
@@ -210,7 +242,7 @@ function calcularTotais() {
   if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
 }
 
-// GERAÇÃO DO RID COM BRASÃO DA REPÚBLICA E SEPARAÇÃO PELOS 6 GRUPOS OFICIAIS DA RES. 239/2026
+// GERAÇÃO DO RID COM BRASÃO DA REPÚBLICA E SEPARAÇÃO PELOS 5 GRUPOS OFICIAIS DA RES. 239/2026
 async function gerarRIDOficialComBrasao() {
   const btn = document.getElementById("btn-gerar-pdf");
   if (btn) {
@@ -228,7 +260,10 @@ async function gerarRIDOficialComBrasao() {
     let paginaAtual = 2; // O resumo do RID ocupa a Página 1
     const itensComPagina = [];
 
-    for (const item of atividadesSelecionadas) {
+    // Garante que o PDF processe os itens na ordem numérica correta
+    const atividadesOrdenadas = [...atividadesSelecionadas].sort((a, b) => compararCodigos(a.cod, b.cod));
+
+    for (const item of atividadesOrdenadas) {
       let numPaginasAnexo = 0;
       let paginaInicio = "Sem comprovante";
 
@@ -257,8 +292,7 @@ async function gerarRIDOficialComBrasao() {
       { key: "pesquisa", titulo: "2. ATIVIDADES DE PESQUISA" },
       { key: "extensao", titulo: "3. ATIVIDADES DE EXTENSÃO" },
       { key: "formacao", titulo: "4. ATIVIDADES DE FORMAÇÃO" },
-      { key: "gestao", titulo: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" },
-      { key: "didatico", titulo: "6. PRODUÇÃO INTEL. E MATERIAL DIDÁTICO/PEDAGÓGICO" }
+      { key: "gestao", titulo: "5. ATIVIDADES DE ADMINISTRAÇÃO E GESTÃO UNIVERSITÁRIA" }
     ];
 
     let tabelasGruposHtml = "";
@@ -349,7 +383,7 @@ async function gerarRIDOficialComBrasao() {
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
 
-    for (const item of atividadesSelecionadas) {
+    for (const item of atividadesOrdenadas) {
       if (item.arquivoPDF) {
         const fileBuffer = await item.arquivoPDF.arrayBuffer();
         try {
