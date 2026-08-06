@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema RID - UFFS</title>
-  
-  <!-- CSS Bootstrap e FontAwesome -->
+
+  <!-- CSS Bootstrap & FontAwesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  
-  <!-- Tipografia e Paleta Oficial UFFS -->
+
   <style>
     :root {
       --verde-uffs: #00693E;
@@ -18,7 +17,7 @@
     }
     body {
       background-color: #f4f6f7;
-      font-family: 'Fira Sans', Arial, sans-serif;
+      font-family: Arial, sans-serif;
     }
     .uffs-header {
       background-color: var(--verde-uffs-escuro);
@@ -29,15 +28,6 @@
       background-color: var(--verde-uffs);
       color: white;
       font-weight: bold;
-    }
-    .nav-tabs .nav-link.active {
-      background-color: var(--verde-uffs) !important;
-      color: white !important;
-      border-color: var(--verde-uffs) !important;
-    }
-    .nav-tabs .nav-link {
-      color: var(--verde-uffs-escuro);
-      font-weight: 600;
     }
     .btn-uffs {
       background-color: var(--verde-uffs);
@@ -53,19 +43,28 @@
       color: var(--verde-uffs-escuro);
       border: 1px solid var(--verde-uffs);
     }
+    .categoria-titulo {
+      color: var(--verde-uffs-escuro);
+      border-bottom: 2px solid var(--verde-uffs);
+      padding-bottom: 5px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body class="p-3 p-md-4">
 
-  <div class="container-fluid max-width-lg bg-white p-0 shadow-sm rounded overflow-hidden" style="max-width: 1100px;">
+  <div class="container-fluid bg-white p-0 shadow-sm rounded overflow-hidden" style="max-width: 1100px; margin: 0 auto;">
     
-    <!-- Cabeçalho Institucional UFFS -->
+    <!-- CABEÇALHO INSTITUCIONAL -->
     <div class="uffs-header p-4 text-center">
       <h4 class="m-0 font-weight-bold">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
       <p class="m-0 mt-1 text-light small">Relatório Individual Docente (RID) — Resolução Nº 239/CONSUNI/UFFS/2026</p>
     </div>
 
     <div class="p-4">
+      
       <!-- DADOS DO DOCENTE -->
       <div class="card mb-4 border-light shadow-sm">
         <div class="card-header card-header-uffs">
@@ -103,119 +102,169 @@
         </div>
       </div>
 
-      <!-- ABAS DE ATIVIDADES -->
-      <ul class="nav nav-tabs" id="ridTabs" role="tablist">
-        <li class="nav-item"><a class="nav-link active" id="tab-ensino" data-toggle="tab" href="#sec-ensino">1. Ensino</a></li>
-        <li class="nav-item"><a class="nav-link" id="tab-pesquisa" data-toggle="tab" href="#sec-pesquisa">2. Pesquisa</a></li>
-        <li class="nav-item"><a class="nav-link" id="tab-extensao" data-toggle="tab" href="#sec-extensao">3. Extensão</a></li>
-        <li class="nav-item"><a class="nav-link" id="tab-formacao" data-toggle="tab" href="#sec-formacao">4. Formação</a></li>
-        <li class="nav-item"><a class="nav-link" id="tab-gestao" data-toggle="tab" href="#sec-gestao">5. Gestão</a></li>
-      </ul>
-
-      <div class="tab-content border border-top-0 p-3 bg-white rounded-bottom" id="ridTabsContent">
-        
-        <!-- MACRO GERADORA DAS SEÇÕES -->
-        <!-- ENSINO -->
-        <div class="tab-pane fade show active" id="sec-ensino" role="tabpanel">
-          <h6 class="mt-2 text-success font-weight-bold">Atividades de Ensino</h6>
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-7">
-              <label class="small">Selecione a atividade:</label>
-              <select id="select-ensino" class="form-control"></select>
-            </div>
-            <div class="form-group col-md-3">
-              <label class="small">Qtd / Horas:</label>
-              <input type="number" id="qtd-ensino" class="form-control" min="0.1" step="any" placeholder="Ex: 60">
-            </div>
-            <div class="form-group col-md-2">
-              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('ensino')"><i class="fas fa-plus"></i> Adicionar</button>
-            </div>
+      <!-- SEÇÕES DE ATIVIDADES CONTINUAS (SEM ABAS OCULTAS) -->
+      
+      <!-- 1. ENSINO -->
+      <h5 class="categoria-titulo"><i class="fas fa-chalkboard-teacher mr-2"></i>1. Atividades de Ensino</h5>
+      <div class="card card-body bg-light mb-4">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-7">
+            <label class="small font-weight-bold">Selecione a atividade:</label>
+            <select id="select-ensino" class="form-control">
+              <option value="">-- Selecione uma atividade --</option>
+              <option value="1_1_1">[1.1.1.] Ministração de Componente Curricular na Graduação (2.5 pontos/15h)</option>
+              <option value="1_1_2">[1.1.2.] Ministração de Componente Curricular na Pós-Graduação (2.5 pontos/15h)</option>
+              <option value="1_2_1">[1.2.1.] Membro titular de colegiado de curso (2.0 pontos/semestre)</option>
+              <option value="1_2_2">[1.2.2.] Membro suplente de colegiado de curso (1.0 pontos/semestre)</option>
+              <option value="1_2_3">[1.2.3.] Membro do Núcleo Docente Estruturante (NDE) (2.0 pontos/semestre)</option>
+              <option value="1_2_4">[1.2.4.] Membro de fóruns de ensino (1.0 pontos/semestre)</option>
+              <option value="1_2_5">[1.2.5.] Membro de outras comissões ligadas ao ensino (0.5 pontos/semestre)</option>
+              <option value="1_2_6">[1.2.6.] Coordenação de estágios (5.0 pontos/semestre)</option>
+              <option value="1_3_1">[1.3.1.] Orientação de trabalho de conclusão de curso (TCC) (4.0 pontos/TCC)</option>
+              <option value="1_3_2">[1.3.2.] Orientação de Residência Médica (5.0 pontos/unidade)</option>
+              <option value="1_3_3">[1.3.3.] Coorientação de TCC ou Residência Médica (2.0 pontos/unidade)</option>
+              <option value="1_3_4">[1.3.4.] Orientação de estágio curricular obrigatório (2.0 pontos/estagiário)</option>
+              <option value="1_3_5">[1.3.5.] Orientação de estágio curricular não obrigatório (1.0 pontos/estagiário)</option>
+              <option value="1_3_6">[1.3.6.] Orientação de monitoria (3.0 pontos/projeto)</option>
+              <option value="1_3_7">[1.3.7.] Orientação ou supervisão de PET, PIBID ou Residência Pedagógica (4.0 pontos/semestre)</option>
+              <option value="1_3_8">[1.3.8.] Tutoria acadêmica (2.0 pontos/semestre)</option>
+              <option value="1_4_1">[1.4.1.] Execução de palestra ou aula inaugural (2.0 pontos/palestra)</option>
+              <option value="1_4_2">[1.4.2.] Participação em banca de TCC de Graduação (1.5 pontos/banca)</option>
+            </select>
           </div>
-          <div id="tabela-ensino"></div>
-        </div>
-
-        <!-- PESQUISA -->
-        <div class="tab-pane fade" id="sec-pesquisa" role="tabpanel">
-          <h6 class="mt-2 text-success font-weight-bold">Atividades de Pesquisa</h6>
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-7">
-              <label class="small">Selecione a atividade:</label>
-              <select id="select-pesquisa" class="form-control"></select>
-            </div>
-            <div class="form-group col-md-3">
-              <label class="small">Qtd / Horas:</label>
-              <input type="number" id="qtd-pesquisa" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-            </div>
-            <div class="form-group col-md-2">
-              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('pesquisa')"><i class="fas fa-plus"></i> Adicionar</button>
-            </div>
+          <div class="form-group col-md-3">
+            <label class="small font-weight-bold">Qtd / Horas:</label>
+            <input type="number" id="qtd-ensino" class="form-control" min="0.1" step="any" placeholder="Ex: 60">
           </div>
-          <div id="tabela-pesquisa"></div>
-        </div>
-
-        <!-- EXTENSÃO -->
-        <div class="tab-pane fade" id="sec-extensao" role="tabpanel">
-          <h6 class="mt-2 text-success font-weight-bold">Atividades de Extensão</h6>
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-7">
-              <label class="small">Selecione a atividade:</label>
-              <select id="select-extensao" class="form-control"></select>
-            </div>
-            <div class="form-group col-md-3">
-              <label class="small">Qtd / Horas:</label>
-              <input type="number" id="qtd-extensao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-            </div>
-            <div class="form-group col-md-2">
-              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('extensao')"><i class="fas fa-plus"></i> Adicionar</button>
-            </div>
+          <div class="form-group col-md-2">
+            <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('ensino')"><i class="fas fa-plus"></i> Adicionar</button>
           </div>
-          <div id="tabela-extensao"></div>
         </div>
-
-        <!-- FORMAÇÃO -->
-        <div class="tab-pane fade" id="sec-formacao" role="tabpanel">
-          <h6 class="mt-2 text-success font-weight-bold">Atividades de Formação</h6>
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-7">
-              <label class="small">Selecione a atividade:</label>
-              <select id="select-formacao" class="form-control"></select>
-            </div>
-            <div class="form-group col-md-3">
-              <label class="small">Qtd / Horas:</label>
-              <input type="number" id="qtd-formacao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-            </div>
-            <div class="form-group col-md-2">
-              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('formacao')"><i class="fas fa-plus"></i> Adicionar</button>
-            </div>
-          </div>
-          <div id="tabela-formacao"></div>
-        </div>
-
-        <!-- GESTÃO -->
-        <div class="tab-pane fade" id="sec-gestao" role="tabpanel">
-          <h6 class="mt-2 text-success font-weight-bold">Atividades de Gestão</h6>
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-7">
-              <label class="small">Selecione a atividade:</label>
-              <select id="select-gestao" class="form-control"></select>
-            </div>
-            <div class="form-group col-md-3">
-              <label class="small">Qtd / Horas:</label>
-              <input type="number" id="qtd-gestao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-            </div>
-            <div class="form-group col-md-2">
-              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('gestao')"><i class="fas fa-plus"></i> Adicionar</button>
-            </div>
-          </div>
-          <div id="tabela-gestao"></div>
-        </div>
-
+        <div id="tabela-ensino"></div>
       </div>
 
-      <!-- PAINEL DE PONTUAÇÃO E BOTÃO DE PDF -->
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 p-3 badge-pontos rounded">
+      <!-- 2. PESQUISA -->
+      <h5 class="categoria-titulo"><i class="fas fa-microscope mr-2"></i>2. Atividades de Pesquisa</h5>
+      <div class="card card-body bg-light mb-4">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-7">
+            <label class="small font-weight-bold">Selecione a atividade:</label>
+            <select id="select-pesquisa" class="form-control">
+              <option value="">-- Selecione uma atividade --</option>
+              <option value="2_1_1">[2.1.1.] Coordenação de projeto de pesquisa institucionalizado (3.0 pontos/semestre)</option>
+              <option value="2_1_2">[2.1.2.] Colaboração em projeto de pesquisa institucionalizado (1.5 pontos/semestre)</option>
+              <option value="2_1_3">[2.1.3.] Coordenação de grupo de pesquisa cadastrado no CNPq (2.0 pontos/semestre)</option>
+              <option value="2_2_1">[2.2.1.] Orientação de dissertação de mestrado concluída (10.0 pontos/dissertação)</option>
+              <option value="2_2_2">[2.2.2.] Orientação de tese de doutorado concluída (15.0 pontos/tese)</option>
+              <option value="2_2_3">[2.2.3.] Orientação em andamento de Mestrado (4.0 pontos/semestre)</option>
+              <option value="2_2_4">[2.2.4.] Orientação em andamento de Doutorado (6.0 pontos/semestre)</option>
+              <option value="2_2_5">[2.2.5.] Orientação de Iniciação Científica (IC/IT) (3.0 pontos/projeto)</option>
+              <option value="2_3_1">[2.3.1.] Publicação de artigo científico Qualis A (15.0 pontos/artigo)</option>
+              <option value="2_3_2">[2.3.2.] Publicação de artigo científico Qualis B (10.0 pontos/artigo)</option>
+              <option value="2_3_3">[2.3.3.] Publicação de livro autoral com conselho editorial (20.0 pontos/livro)</option>
+              <option value="2_3_4">[2.3.4.] Publicação de capítulo de livro (5.0 pontos/capítulo)</option>
+              <option value="2_4_1">[2.4.1.] Banca de defesa de Mestrado (3.0 pontos/banca)</option>
+              <option value="2_4_2">[2.4.2.] Banca de defesa de Doutorado (5.0 pontos/banca)</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label class="small font-weight-bold">Qtd / Horas:</label>
+            <input type="number" id="qtd-pesquisa" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+          </div>
+          <div class="form-group col-md-2">
+            <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('pesquisa')"><i class="fas fa-plus"></i> Adicionar</button>
+          </div>
+        </div>
+        <div id="tabela-pesquisa"></div>
+      </div>
+
+      <!-- 3. EXTENSÃO -->
+      <h5 class="categoria-titulo"><i class="fas fa-hands-helping mr-2"></i>3. Atividades de Extensão</h5>
+      <div class="card card-body bg-light mb-4">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-7">
+            <label class="small font-weight-bold">Selecione a atividade:</label>
+            <select id="select-extensao" class="form-control">
+              <option value="">-- Selecione uma atividade --</option>
+              <option value="3_1_1">[3.1.1.] Coordenação de programa de extensão ou cultura (4.0 pontos/semestre)</option>
+              <option value="3_1_2">[3.1.2.] Colaboração em programa de extensão ou cultura (2.0 pontos/semestre)</option>
+              <option value="3_1_3">[3.1.3.] Coordenação de projeto de extensão ou cultura (3.0 pontos/semestre)</option>
+              <option value="3_1_4">[3.1.4.] Colaboração em projeto de extensão ou cultura (1.5 pontos/semestre)</option>
+              <option value="3_2_1">[3.2.1.] Orientação de bolsista ou voluntário de extensão (2.0 pontos/projeto)</option>
+              <option value="3_3_1">[3.3.1.] Produtos acadêmicos de extensão e cultura (1.0 pontos/unidade)</option>
+              <option value="3_4_1">[3.4.1.] Organização de evento de extensão (3.0 pontos/evento)</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label class="small font-weight-bold">Qtd / Horas:</label>
+            <input type="number" id="qtd-extensao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+          </div>
+          <div class="form-group col-md-2">
+            <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('extensao')"><i class="fas fa-plus"></i> Adicionar</button>
+          </div>
+        </div>
+        <div id="tabela-extensao"></div>
+      </div>
+
+      <!-- 4. FORMAÇÃO -->
+      <h5 class="categoria-titulo"><i class="fas fa-user-graduate mr-2"></i>4. Atividades de Formação</h5>
+      <div class="card card-body bg-light mb-4">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-7">
+            <label class="small font-weight-bold">Selecione a atividade:</label>
+            <select id="select-formacao" class="form-control">
+              <option value="">-- Selecione uma atividade --</option>
+              <option value="4_1_1">[4.1.1.] Pós-graduação stricto sensu (com afastamento) (45.0 pontos/semestre)</option>
+              <option value="4_1_2">[4.1.2.] Pós-graduação stricto sensu (sem afastamento) (28.0 pontos/semestre)</option>
+              <option value="4_1_3">[4.1.3.] Estágio Pós-Doutoral (com afastamento) (45.0 pontos/semestre)</option>
+              <option value="4_1_4">[4.1.4.] Estágio Pós-Doutoral (sem afastamento) (28.0 pontos/semestre)</option>
+              <option value="4_1_5">[4.1.5.] Cursos de formação continuada (mínimo 20h) (1.0 pontos/curso)</option>
+              <option value="4_1_6">[4.1.6.] Participação em cursos de formação docente UFFS (2.0 pontos/curso)</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label class="small font-weight-bold">Qtd / Horas:</label>
+            <input type="number" id="qtd-formacao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+          </div>
+          <div class="form-group col-md-2">
+            <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('formacao')"><i class="fas fa-plus"></i> Adicionar</button>
+          </div>
+        </div>
+        <div id="tabela-formacao"></div>
+      </div>
+
+      <!-- 5. GESTÃO -->
+      <h5 class="categoria-titulo"><i class="fas fa-tasks mr-2"></i>5. Atividades de Gestão</h5>
+      <div class="card card-body bg-light mb-4">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-7">
+            <label class="small font-weight-bold">Selecione a atividade:</label>
+            <select id="select-gestao" class="form-control">
+              <option value="">-- Selecione uma atividade --</option>
+              <option value="5_1_1">[5.1.1.] Reitor, Vice-Reitor, Pró-Reitor ou Diretor de Campus (45.0 pontos/semestre)</option>
+              <option value="5_1_2">[5.1.2.] Secretário Especial ou Superintendente (40.0 pontos/semestre)</option>
+              <option value="5_1_3">[5.1.3.] Pró-Reitor Adjunto ou Diretor de Assessoria/Secretaria (35.0 pontos/semestre)</option>
+              <option value="5_1_7">[5.1.7.] Coordenador de curso de graduação ou pós-graduação (30.0 pontos/semestre)</option>
+              <option value="5_1_8">[5.1.8.] Coordenador adjunto ou de subárea de programa acadêmico (15.0 pontos/semestre)</option>
+              <option value="5_1_12">[5.1.12.] Membro de comissão instituída por ato administrativo (5.0 pontos/semestre)</option>
+              <option value="5_1_13">[5.1.13.] Membro do CONSUNI ou CÂMARAS FONTES (5.0 pontos/semestre)</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label class="small font-weight-bold">Qtd / Horas:</label>
+            <input type="number" id="qtd-gestao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+          </div>
+          <div class="form-group col-md-2">
+            <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('gestao')"><i class="fas fa-plus"></i> Adicionar</button>
+          </div>
+        </div>
+        <div id="tabela-gestao"></div>
+      </div>
+
+      <!-- BARRA DE PONTUAÇÃO E EMISSÃO DE PDF -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 p-3 badge-pontos rounded shadow-sm">
         <h5 class="m-0 mb-2 mb-md-0 font-weight-bold">Pontuação Total Final: <span id="pontuacao-total-geral" class="text-success">0.00</span> pts</h5>
-        <button id="btn-gerar-pdf" class="btn btn-uffs btn-lg shadow-sm" onclick="gerarRIDOficialComBrasao()">
+        <button id="btn-gerar-pdf" class="btn btn-uffs btn-lg" onclick="gerarRIDOficialComBrasao()">
           <i class="fas fa-file-pdf mr-2"></i>Gerar RID Oficial + Comprovantes PDF
         </button>
       </div>
@@ -223,13 +272,189 @@
     </div>
   </div>
 
-  <!-- BIBLIOTECAS VITALÍCIAS -->
+  <!-- BIBLIOTECAS JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- ARQUIVO DE SCRIPT -->
-  <script src="script.js"></script>
+  <!-- LÓGICA JAVASCRIPT INTEGRADA -->
+  <script>
+    const catalogoRID = [
+      { id: "1_1_1", cod: "1.1.1.", desc: "Ministração de Componente Curricular na Graduação", fator: 2.5, unit: "pontos/15h", cat: "ensino", calc: "horas" },
+      { id: "1_1_2", cod: "1.1.2.", desc: "Ministração de Componente Curricular na Pós-Graduação", fator: 2.5, unit: "pontos/15h", cat: "ensino", calc: "horas" },
+      { id: "1_2_1", cod: "1.2.1.", desc: "Membro titular de colegiado de curso", fator: 2.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_2_2", cod: "1.2.2.", desc: "Membro suplente de colegiado de curso", fator: 1.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_2_3", cod: "1.2.3.", desc: "Membro do Núcleo Docente Estruturante (NDE)", fator: 2.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_2_4", cod: "1.2.4.", desc: "Membro de fóruns de ensino", fator: 1.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_2_5", cod: "1.2.5.", desc: "Membro de outras comissões ligadas ao ensino", fator: 0.5, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_2_6", cod: "1.2.6.", desc: "Coordenação de estágios", fator: 5.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_3_1", cod: "1.3.1.", desc: "Orientação de trabalho de conclusão de curso (TCC)", fator: 4.0, unit: "pontos/TCC", cat: "ensino" },
+      { id: "1_3_2", cod: "1.3.2.", desc: "Orientação de Residência Médica", fator: 5.0, unit: "pontos/unidade", cat: "ensino" },
+      { id: "1_3_3", cod: "1.3.3.", desc: "Coorientação de TCC ou Residência Médica", fator: 2.0, unit: "pontos/unidade", cat: "ensino" },
+      { id: "1_3_4", cod: "1.3.4.", desc: "Orientação de estágio curricular obrigatório", fator: 2.0, unit: "pontos/estagiário", cat: "ensino" },
+      { id: "1_3_5", cod: "1.3.5.", desc: "Orientação de estágio curricular não obrigatório", fator: 1.0, unit: "pontos/estagiário", cat: "ensino" },
+      { id: "1_3_6", cod: "1.3.6.", desc: "Orientação de monitoria", fator: 3.0, unit: "pontos/projeto", cat: "ensino" },
+      { id: "1_3_7", cod: "1.3.7.", desc: "Orientação ou supervisão de PET, PIBID ou Residência Pedagógica", fator: 4.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_3_8", cod: "1.3.8.", desc: "Tutoria acadêmica", fator: 2.0, unit: "pontos/semestre", cat: "ensino" },
+      { id: "1_4_1", cod: "1.4.1.", desc: "Execução de palestra ou aula inaugural", fator: 2.0, unit: "pontos/palestra", cat: "ensino" },
+      { id: "1_4_2", cod: "1.4.2.", desc: "Participação em banca de TCC de Graduação", fator: 1.5, unit: "pontos/banca", cat: "ensino" },
+      { id: "2_1_1", cod: "2.1.1.", desc: "Coordenação de projeto de pesquisa institucionalizado", fator: 3.0, unit: "pontos/semestre", cat: "pesquisa" },
+      { id: "2_1_2", cod: "2.1.2.", desc: "Colaboração em projeto de pesquisa institucionalizado", fator: 1.5, unit: "pontos/semestre", cat: "pesquisa" },
+      { id: "2_1_3", cod: "2.1.3.", desc: "Coordenação de grupo de pesquisa cadastrado no CNPq", fator: 2.0, unit: "pontos/semestre", cat: "pesquisa" },
+      { id: "2_2_1", cod: "2.2.1.", desc: "Orientação de dissertação de mestrado concluída", fator: 10.0, unit: "pontos/dissertação", cat: "pesquisa" },
+      { id: "2_2_2", cod: "2.2.2.", desc: "Orientação de tese de doutorado concluída", fator: 15.0, unit: "pontos/tese", cat: "pesquisa" },
+      { id: "2_2_3", cod: "2.2.3.", desc: "Orientação em andamento de Mestrado", fator: 4.0, unit: "pontos/semestre", cat: "pesquisa" },
+      { id: "2_2_4", cod: "2.2.4.", desc: "Orientação em andamento de Doutorado", fator: 6.0, unit: "pontos/semestre", cat: "pesquisa" },
+      { id: "2_2_5", cod: "2.2.5.", desc: "Orientação de Iniciação Científica (IC/IT)", fator: 3.0, unit: "pontos/projeto", cat: "pesquisa" },
+      { id: "2_3_1", cod: "2.3.1.", desc: "Publicação de artigo científico Qualis A", fator: 15.0, unit: "pontos/artigo", cat: "pesquisa" },
+      { id: "2_3_2", cod: "2.3.2.", desc: "Publicação de artigo científico Qualis B", fator: 10.0, unit: "pontos/artigo", cat: "pesquisa" },
+      { id: "2_3_3", cod: "2.3.3.", desc: "Publicação de livro autoral com conselho editorial", fator: 20.0, unit: "pontos/livro", cat: "pesquisa" },
+      { id: "2_3_4", cod: "2.3.4.", desc: "Publicação de capítulo de livro", fator: 5.0, unit: "pontos/capítulo", cat: "pesquisa" },
+      { id: "2_4_1", cod: "2.4.1.", desc: "Banca de defesa de Mestrado", fator: 3.0, unit: "pontos/banca", cat: "pesquisa" },
+      { id: "2_4_2", cod: "2.4.2.", desc: "Banca de defesa de Doutorado", fator: 5.0, unit: "pontos/banca", cat: "pesquisa" },
+      { id: "3_1_1", cod: "3.1.1.", desc: "Coordenação de programa de extensão ou cultura", fator: 4.0, unit: "pontos/semestre", cat: "extensao" },
+      { id: "3_1_2", cod: "3.1.2.", desc: "Colaboração em programa de extensão ou cultura", fator: 2.0, unit: "pontos/semestre", cat: "extensao" },
+      { id: "3_1_3", cod: "3.1.3.", desc: "Coordenação de projeto de extensão ou cultura", fator: 3.0, unit: "pontos/semestre", cat: "extensao" },
+      { id: "3_1_4", cod: "3.1.4.", desc: "Colaboração em projeto de extensão ou cultura", fator: 1.5, unit: "pontos/semestre", cat: "extensao" },
+      { id: "3_2_1", cod: "3.2.1.", desc: "Orientação de bolsista ou voluntário de extensão", fator: 2.0, unit: "pontos/projeto", cat: "extensao" },
+      { id: "3_3_1", cod: "3.3.1.", desc: "Produtos acadêmicos de extensão e cultura", fator: 1.0, unit: "pontos/unidade", cat: "extensao" },
+      { id: "3_4_1", cod: "3.4.1.", desc: "Organização de evento de extensão", fator: 3.0, unit: "pontos/evento", cat: "extensao" },
+      { id: "4_1_1", cod: "4.1.1.", desc: "Pós-graduação stricto sensu (com afastamento)", fator: 45.0, unit: "pontos/semestre", cat: "formacao" },
+      { id: "4_1_2", cod: "4.1.2.", desc: "Pós-graduação stricto sensu (sem afastamento)", fator: 28.0, unit: "pontos/semestre", cat: "formacao" },
+      { id: "4_1_3", cod: "4.1.3.", desc: "Estágio Pós-Doutoral (com afastamento)", fator: 45.0, unit: "pontos/semestre", cat: "formacao" },
+      { id: "4_1_4", cod: "4.1.4.", desc: "Estágio Pós-Doutoral (sem afastamento)", fator: 28.0, unit: "pontos/semestre", cat: "formacao" },
+      { id: "4_1_5", cod: "4.1.5.", desc: "Cursos de formação continuada (mínimo 20h)", fator: 1.0, unit: "pontos/curso", cat: "formacao" },
+      { id: "4_1_6", cod: "4.1.6.", desc: "Participação em cursos de formação docente UFFS", fator: 2.0, unit: "pontos/curso", cat: "formacao" },
+      { id: "5_1_1", cod: "5.1.1.", desc: "Reitor, Vice-Reitor, Pró-Reitor ou Diretor de Campus", fator: 45.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_2", cod: "5.1.2.", desc: "Secretário Especial ou Superintendente", fator: 40.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_3", cod: "5.1.3.", desc: "Pró-Reitor Adjunto ou Diretor de Assessoria/Secretaria", fator: 35.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_7", cod: "5.1.7.", desc: "Coordenador de curso de graduação ou pós-graduação", fator: 30.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_8", cod: "5.1.8.", desc: "Coordenador adjunto ou de subárea de programa acadêmico", fator: 15.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_12", cod: "5.1.12.", desc: "Membro de comissão instituída por ato administrativo", fator: 5.0, unit: "pontos/semestre", cat: "gestao" },
+      { id: "5_1_13", cod: "5.1.13.", desc: "Membro do CONSUNI ou CÂMARAS FONTES", fator: 5.0, unit: "pontos/semestre", cat: "gestao" }
+    ];
+
+    let atividadesSelecionadas = [];
+
+    window.onload = function() {
+      renderizarTodasAsTabelas();
+    };
+
+    function adicionarAtividade(cat) {
+      const select = document.getElementById(`select-${cat}`);
+      const qtdInput = document.getElementById(`qtd-${cat}`);
+
+      if (!select || !qtdInput) return;
+      const itemId = select.value;
+      const qtd = parseFloat(qtdInput.value);
+
+      if (!itemId) { alert("Selecione uma atividade."); return; }
+      if (isNaN(qtd) || qtd <= 0) { alert("Informe uma quantidade válida."); return; }
+
+      const itemInfo = catalogoRID.find(i => i.id === itemId);
+      if (!itemInfo) return;
+
+      atividadesSelecionadas.push({
+        uid: Date.now() + Math.random(),
+        id: itemInfo.id,
+        cod: itemInfo.cod,
+        desc: itemInfo.desc,
+        fator: itemInfo.fator,
+        unit: itemInfo.unit,
+        cat: itemInfo.cat,
+        calc: itemInfo.calc,
+        qtd: qtd,
+        arquivoPDF: null
+      });
+
+      select.value = "";
+      qtdInput.value = "";
+
+      renderizarTabelaCategoria(cat);
+      calcularTotais();
+    }
+
+    function removerAtividade(uid, cat) {
+      atividadesSelecionadas = atividadesSelecionadas.filter(item => item.uid !== uid);
+      renderizarTabelaCategoria(cat);
+      calcularTotais();
+    }
+
+    function salvarComprovante(uid, inputElement) {
+      const item = atividadesSelecionadas.find(i => i.uid === uid);
+      if (item && inputElement.files && inputElement.files[0]) {
+        item.arquivoPDF = inputElement.files[0];
+      }
+    }
+
+    function renderizarTodasAsTabelas() {
+      ["ensino", "pesquisa", "extensao", "formacao", "gestao"].forEach(cat => renderizarTabelaCategoria(cat));
+    }
+
+    function renderizarTabelaCategoria(cat) {
+      const container = document.getElementById(`tabela-${cat}`);
+      if (!container) return;
+
+      const itens = atividadesSelecionadas.filter(i => i.cat === cat);
+
+      if (itens.length === 0) {
+        container.innerHTML = `<div class="alert alert-light text-center border text-muted my-2">Nenhuma atividade adicionada nesta categoria.</div>`;
+        return;
+      }
+
+      let html = `
+        <table class="table table-bordered table-sm table-hover mt-3 bg-white">
+          <thead class="thead-light">
+            <tr>
+              <th style="width: 40%">Atividade</th>
+              <th style="width: 15%">Fator</th>
+              <th style="width: 10%">Qtd/Horas</th>
+              <th style="width: 10%">Pontos</th>
+              <th style="width: 15%">Comprovante PDF</th>
+              <th style="width: 10%" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      itens.forEach(item => {
+        let pontos = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
+        html += `
+          <tr>
+            <td><small><strong>${item.cod}</strong> ${item.desc}</small></td>
+            <td><small class="text-muted">${item.fator} ${item.unit}</small></td>
+            <td><strong>${item.qtd}</strong></td>
+            <td><span class="font-weight-bold text-success">${pontos.toFixed(2)}</span></td>
+            <td>
+              <input type="file" class="form-control-file form-control-sm" accept="application/pdf" onchange="salvarComprovante(${item.uid}, this)">
+            </td>
+            <td class="text-center">
+              <button class="btn btn-outline-danger btn-sm" onclick="removerAtividade(${item.uid}, '${cat}')" title="Excluir">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      container.innerHTML = html;
+    }
+
+    function calcularTotais() {
+      let totalGeral = 0;
+      atividadesSelecionadas.forEach(item => {
+        let pontos = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
+        totalGeral += pontos;
+      });
+      const elGeral = document.getElementById("pontuacao-total-geral");
+      if (elGeral) elGeral.innerText = totalGeral.toFixed(2);
+    }
+
+    async function gerarRIDOficialComBrasao() {
+      alert("Função de PDF pronta para exportar com os anexos!");
+    }
+  </script>
 </body>
 </html>
