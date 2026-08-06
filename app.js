@@ -254,13 +254,13 @@ async function gerarRIDOficialComBrasao() {
     const { PDFDocument } = PDFLib;
     const pdfFinal = await PDFDocument.create();
 
-    const nomeDocente = document.getElementById("nome_civil").value || "Docente";
-    const siape = document.getElementById("siape").value || "---";
+    const nomeDocente = document.getElementById("nome_civil")?.value || "Docente";
+    const siape = document.getElementById("siape")?.value || "---";
 
-    let paginaAtual = 2; // O resumo do RID ocupa a Página 1
+    let paginaAtual = 2; // O resumo do RID ocupa as primeiras páginas
     const itensComPagina = [];
 
-    // Garante que o PDF processe os itens na ordem numérica correta
+    // Ordenação numérica dos itens
     const atividadesOrdenadas = [...atividadesSelecionadas].sort((a, b) => compararCodigos(a.cod, b.cod));
 
     for (const item of atividadesOrdenadas) {
@@ -283,9 +283,14 @@ async function gerarRIDOficialComBrasao() {
     }
 
     const ridElement = document.createElement("div");
-    ridElement.style.padding = "25px";
+    // Largura padronizada para A4 (794px) com box-sizing para evitar quebras estranhas
+    ridElement.style.width = "794px";
+    ridElement.style.padding = "30px 40px";
+    ridElement.style.boxSizing = "border-box";
     ridElement.style.fontFamily = "Arial, sans-serif";
-    ridElement.style.fontSize = "12px";
+    ridElement.style.fontSize = "11px";
+    ridElement.style.color = "#333";
+    ridElement.style.backgroundColor = "#fff";
 
     const gruposOficiais = [
       { key: "ensino", titulo: "1. ATIVIDADES DE ENSINO" },
@@ -301,19 +306,25 @@ async function gerarRIDOficialComBrasao() {
       const itensDoGrupo = itensComPagina.filter(i => i.cat === grupo.key);
       let subtotalGrupo = 0;
 
-      tabelasGruposHtml += `<h4 style="background:#006b3f; color:white; padding:6px; margin-top:15px; margin-bottom:5px; font-size:12px;">${grupo.titulo}</h4>`;
+      // "page-break-inside: avoid" garante que a seção não seja cortada no meio
+      tabelasGruposHtml += `
+        <div style="page-break-inside: avoid; margin-top: 15px;">
+          <h4 style="background:#006b3f; color:white; padding:6px 10px; margin:0 0 8px 0; font-size:12px; font-weight:bold; border-radius:3px;">
+            ${grupo.titulo}
+          </h4>
+      `;
       
       if (itensDoGrupo.length === 0) {
-        tabelasGruposHtml += `<p style="font-style:italic; color:#666; margin-left:10px;">Nenhuma atividade declarada neste grupo.</p>`;
+        tabelasGruposHtml += `<p style="font-style:italic; color:#777; margin:5px 0 15px 10px;">Nenhuma atividade declarada neste grupo.</p>`;
       } else {
         tabelasGruposHtml += `
-          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:11px;">
+          <table style="width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10.5px; table-layout: fixed;">
             <thead>
-              <tr style="background:#e9ecef;">
-                <th style="border:1px solid #aaa; padding:5px; text-align:left;">Código / Descrição da Atividade</th>
-                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Qtd/Horas</th>
-                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Pontos</th>
-                <th style="border:1px solid #aaa; padding:5px; text-align:center;">Localização do Comprovante</th>
+              <tr style="background:#f2f4f5;">
+                <th style="border:1px solid #bbb; padding:6px; text-align:left; width:52%;">Código / Descrição da Atividade</th>
+                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:13%;">Qtd/Horas</th>
+                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:12%;">Pontos</th>
+                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:23%;">Localização Comprovante</th>
               </tr>
             </thead>
             <tbody>
@@ -325,10 +336,10 @@ async function gerarRIDOficialComBrasao() {
 
           tabelasGruposHtml += `
             <tr>
-              <td style="border:1px solid #aaa; padding:5px;"><strong>${item.cod}</strong> ${item.desc}</td>
-              <td style="border:1px solid #aaa; padding:5px; text-align:center;">${item.qtd}</td>
-              <td style="border:1px solid #aaa; padding:5px; text-align:center; font-weight:bold;">${pts.toFixed(2)}</td>
-              <td style="border:1px solid #aaa; padding:5px; text-align:center; color:#006b3f; font-weight:bold;">${item.paginaInfo}</td>
+              <td style="border:1px solid #bbb; padding:5px 6px; word-wrap:break-word;"><strong>${item.cod}</strong> ${item.desc}</td>
+              <td style="border:1px solid #bbb; padding:5px; text-align:center;">${item.qtd}</td>
+              <td style="border:1px solid #bbb; padding:5px; text-align:center; font-weight:bold; color:#006b3f;">${pts.toFixed(2)}</td>
+              <td style="border:1px solid #bbb; padding:5px; text-align:center; color:#444; font-size:9.5px;">${item.paginaInfo}</td>
             </tr>
           `;
         });
@@ -336,53 +347,77 @@ async function gerarRIDOficialComBrasao() {
         tabelasGruposHtml += `
             </tbody>
           </table>
-          <div style="text-align:right; font-weight:bold; margin-bottom:10px;">Subtotal ${grupo.titulo}: ${subtotalGrupo.toFixed(2)} pts</div>
+          <div style="text-align:right; font-weight:bold; margin-bottom:15px; font-size:11px;">
+            Subtotal ${grupo.titulo}: <span style="color:#006b3f;">${subtotalGrupo.toFixed(2)} pts</span>
+          </div>
         `;
       }
+
+      tabelasGruposHtml += `</div>`;
     });
 
     ridElement.innerHTML = `
-      <div style="text-align:center; margin-bottom:15px;">
-        <img src="brasaodarepublica.png" style="width:75px; height:auto; margin-bottom:6px;" alt="Brasão da República">
-        <h3 style="margin:2px; color:#004d2d; font-size:15px; font-weight:bold;">REPÚBLICA FEDERATIVA DO BRASIL</h3>
-        <h4 style="margin:2px; color:#006b3f; font-size:13px; font-weight:bold;">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
-        <h5 style="margin:2px; font-size:11px; font-weight:bold;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
+      <!-- CABEÇALHO DA INSTITUIÇÃO -->
+      <div style="text-align:center; margin-bottom:15px; page-break-inside: avoid;">
+        <img src="brasaodarepublica.png" style="width:70px; height:auto; margin-bottom:5px;" alt="Brasão da República">
+        <h3 style="margin:2px 0; color:#004d2d; font-size:14px; font-weight:bold; text-transform:uppercase;">República Federativa do Brasil</h3>
+        <h4 style="margin:2px 0; color:#006b3f; font-size:12px; font-weight:bold; text-transform:uppercase;">Universidade Federal da Fronteira Sul - UFFS</h4>
+        <h5 style="margin:4px 0 0 0; font-size:11px; font-weight:bold; color:#333;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
       </div>
-      <hr style="border:0.5px solid #006b3f; margin-bottom:15px;">
-      <table style="width:100%; margin-bottom:10px; font-size:11px;">
-        <tr>
-          <td><strong>Docente:</strong> ${nomeDocente}</td>
-          <td><strong>SIAPE:</strong> ${siape}</td>
-        </tr>
-        <tr>
-          <td><strong>Lotação:</strong> ${document.getElementById("lotacao").value}</td>
-          <td><strong>Regime:</strong> ${document.getElementById("regime").value}</td>
-        </tr>
-        <tr>
-          <td><strong>Período Avaliado:</strong> ${document.getElementById("periodo_avaliacao").value}</td>
-          <td><strong>Data Progressão:</strong> ${document.getElementById("data_progressao").value}</td>
-        </tr>
-      </table>
 
+      <hr style="border:0; border-top: 1.5px solid #006b3f; margin-bottom:15px;">
+
+      <!-- DADOS DO DOCENTE -->
+      <div style="page-break-inside: avoid; background-color:#f9f9f9; padding:10px 12px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;">
+        <table style="width:100%; font-size:10.5px; border-collapse:collapse;">
+          <tr>
+            <td style="padding:3px 0; width:55%;"><strong>Docente:</strong> ${nomeDocente}</td>
+            <td style="padding:3px 0; width:45%;"><strong>SIAPE:</strong> ${siape}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 0;"><strong>Lotação:</strong> ${document.getElementById("lotacao")?.value || "---"}</td>
+            <td style="padding:3px 0;"><strong>Regime:</strong> ${document.getElementById("regime")?.value || "---"}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 0;"><strong>Período Avaliado:</strong> ${document.getElementById("periodo_avaliacao")?.value || "---"}</td>
+            <td style="padding:3px 0;"><strong>Data Progressão:</strong> ${document.getElementById("data_progressao")?.value || "---"}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- CORPO COM AS TABELAS DE GRUPOS -->
       ${tabelasGruposHtml}
 
-      <div style="margin-top:20px; padding:10px; background:#e9ecef; border:1px solid #aaa; text-align:right; font-size:14px;">
-        <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral").innerText} PTS</strong>
-      </div>
+      <!-- TOTAL GERAL E ASSINATURA -->
+      <div style="page-break-inside: avoid; margin-top:20px;">
+        <div style="padding:10px 15px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:4px; text-align:right; font-size:13px; color:#1b5e20;">
+          <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral")?.innerText || "0.00"} PTS</strong>
+        </div>
 
-      <br><br>
-      <div style="text-align:center; margin-top:30px;">
-        <p>____________________________________________________<br>Assinatura do Docente</p>
+        <div style="text-align:center; margin-top:45px;">
+          <p style="margin:0;">____________________________________________________</p>
+          <p style="margin-top:4px; font-weight:bold; font-size:11px;">Assinatura do Docente</p>
+        </div>
       </div>
     `;
 
-    const opt = { margin: 8, filename: 'RID_Oficial.pdf', html2canvas: { scale: 2, useCORS: true } };
+    // Opções otimizadas do html2pdf para evitar quebras ruins e manter legibilidade
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `RID_OFICIAL_${siape}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
     
     const pdfRIDDoc = await PDFDocument.load(ridBuffer);
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
 
+    // Anexação dos comprovantes mantendo a ordem
     for (const item of atividadesOrdenadas) {
       if (item.arquivoPDF) {
         const fileBuffer = await item.arquivoPDF.arrayBuffer();
