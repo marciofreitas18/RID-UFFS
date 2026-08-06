@@ -257,10 +257,9 @@ async function gerarRIDOficialComBrasao() {
     const nomeDocente = document.getElementById("nome_civil")?.value || "Docente";
     const siape = document.getElementById("siape")?.value || "---";
 
-    let paginaAtual = 2; // O resumo do RID ocupa as primeiras páginas
+    let paginaAtual = 2;
     const itensComPagina = [];
 
-    // Ordenação numérica dos itens
     const atividadesOrdenadas = [...atividadesSelecionadas].sort((a, b) => compararCodigos(a.cod, b.cod));
 
     for (const item of atividadesOrdenadas) {
@@ -282,13 +281,16 @@ async function gerarRIDOficialComBrasao() {
       itensComPagina.push({ ...item, paginaInfo: paginaInicio });
     }
 
+    // Div temporária para renderização do HTML
     const ridElement = document.createElement("div");
-    // Largura padronizada para A4 (794px) com box-sizing para evitar quebras estranhas
-    ridElement.style.width = "794px";
-    ridElement.style.padding = "30px 40px";
+    
+    // Zera margens iniciais e ajusta para dimensões exatas de A4
+    ridElement.style.width = "750px";
+    ridElement.style.padding = "0px";
+    ridElement.style.margin = "0px";
     ridElement.style.boxSizing = "border-box";
     ridElement.style.fontFamily = "Arial, sans-serif";
-    ridElement.style.fontSize = "11px";
+    ridElement.style.fontSize = "10px";
     ridElement.style.color = "#333";
     ridElement.style.backgroundColor = "#fff";
 
@@ -306,25 +308,24 @@ async function gerarRIDOficialComBrasao() {
       const itensDoGrupo = itensComPagina.filter(i => i.cat === grupo.key);
       let subtotalGrupo = 0;
 
-      // "page-break-inside: avoid" garante que a seção não seja cortada no meio
       tabelasGruposHtml += `
-        <div style="page-break-inside: avoid; margin-top: 15px;">
-          <h4 style="background:#006b3f; color:white; padding:6px 10px; margin:0 0 8px 0; font-size:12px; font-weight:bold; border-radius:3px;">
+        <div style="margin-top: 10px; page-break-inside: avoid;">
+          <h4 style="background:#006b3f; color:white; padding:4px 8px; margin:0 0 6px 0; font-size:11px; font-weight:bold; border-radius:2px;">
             ${grupo.titulo}
           </h4>
       `;
       
       if (itensDoGrupo.length === 0) {
-        tabelasGruposHtml += `<p style="font-style:italic; color:#777; margin:5px 0 15px 10px;">Nenhuma atividade declarada neste grupo.</p>`;
+        tabelasGruposHtml += `<p style="font-style:italic; color:#777; margin:2px 0 8px 5px; font-size:9.5px;">Nenhuma atividade declarada neste grupo.</p>`;
       } else {
         tabelasGruposHtml += `
-          <table style="width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10.5px; table-layout: fixed;">
+          <table style="width:100%; border-collapse:collapse; margin-bottom:4px; font-size:9.5px; table-layout: fixed;">
             <thead>
               <tr style="background:#f2f4f5;">
-                <th style="border:1px solid #bbb; padding:6px; text-align:left; width:52%;">Código / Descrição da Atividade</th>
-                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:13%;">Qtd/Horas</th>
-                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:12%;">Pontos</th>
-                <th style="border:1px solid #bbb; padding:6px; text-align:center; width:23%;">Localização Comprovante</th>
+                <th style="border:1px solid #bbb; padding:4px; text-align:left; width:52%;">Código / Descrição da Atividade</th>
+                <th style="border:1px solid #bbb; padding:4px; text-align:center; width:12%;">Qtd/Horas</th>
+                <th style="border:1px solid #bbb; padding:4px; text-align:center; width:12%;">Pontos</th>
+                <th style="border:1px solid #bbb; padding:4px; text-align:center; width:24%;">Localização Comprovante</th>
               </tr>
             </thead>
             <tbody>
@@ -335,11 +336,11 @@ async function gerarRIDOficialComBrasao() {
           subtotalGrupo += pts;
 
           tabelasGruposHtml += `
-            <tr>
-              <td style="border:1px solid #bbb; padding:5px 6px; word-wrap:break-word;"><strong>${item.cod}</strong> ${item.desc}</td>
-              <td style="border:1px solid #bbb; padding:5px; text-align:center;">${item.qtd}</td>
-              <td style="border:1px solid #bbb; padding:5px; text-align:center; font-weight:bold; color:#006b3f;">${pts.toFixed(2)}</td>
-              <td style="border:1px solid #bbb; padding:5px; text-align:center; color:#444; font-size:9.5px;">${item.paginaInfo}</td>
+            <tr style="page-break-inside: avoid;">
+              <td style="border:1px solid #bbb; padding:4px; word-wrap:break-word;"><strong>${item.cod}</strong> ${item.desc}</td>
+              <td style="border:1px solid #bbb; padding:4px; text-align:center;">${item.qtd}</td>
+              <td style="border:1px solid #bbb; padding:4px; text-align:center; font-weight:bold; color:#006b3f;">${pts.toFixed(2)}</td>
+              <td style="border:1px solid #bbb; padding:4px; text-align:center; color:#444; font-size:9px;">${item.paginaInfo}</td>
             </tr>
           `;
         });
@@ -347,7 +348,7 @@ async function gerarRIDOficialComBrasao() {
         tabelasGruposHtml += `
             </tbody>
           </table>
-          <div style="text-align:right; font-weight:bold; margin-bottom:15px; font-size:11px;">
+          <div style="text-align:right; font-weight:bold; margin-bottom:10px; font-size:10px;">
             Subtotal ${grupo.titulo}: <span style="color:#006b3f;">${subtotalGrupo.toFixed(2)} pts</span>
           </div>
         `;
@@ -357,58 +358,58 @@ async function gerarRIDOficialComBrasao() {
     });
 
     ridElement.innerHTML = `
-      <!-- CABEÇALHO DA INSTITUIÇÃO -->
-      <div style="text-align:center; margin-bottom:15px; page-break-inside: avoid;">
-        <img src="brasaodarepublica.png" style="width:70px; height:auto; margin-bottom:5px;" alt="Brasão da República">
-        <h3 style="margin:2px 0; color:#004d2d; font-size:14px; font-weight:bold; text-transform:uppercase;">República Federativa do Brasil</h3>
-        <h4 style="margin:2px 0; color:#006b3f; font-size:12px; font-weight:bold; text-transform:uppercase;">Universidade Federal da Fronteira Sul - UFFS</h4>
-        <h5 style="margin:4px 0 0 0; font-size:11px; font-weight:bold; color:#333;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
+      <!-- CABEÇALHO COM PADDING ZERO NO TOPO -->
+      <div style="text-align:center; margin:0 0 10px 0; padding:0;">
+        <img src="brasaodarepublica.png" style="width:55px; height:auto; margin:0 auto 4px auto; display:block;" alt="Brasão da República">
+        <h3 style="margin:0; color:#004d2d; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.2;">República Federativa do Brasil</h3>
+        <h4 style="margin:2px 0 0 0; color:#006b3f; font-size:11px; font-weight:bold; text-transform:uppercase; line-height:1.2;">Universidade Federal da Fronteira Sul - UFFS</h4>
+        <h5 style="margin:4px 0 0 0; font-size:10px; font-weight:bold; color:#333; line-height:1.2;">RELATÓRIO INDIVIDUAL DOCENTE (RID) — RESOLUÇÃO 239/CONSUNI/UFFS/2026</h5>
       </div>
 
-      <hr style="border:0; border-top: 1.5px solid #006b3f; margin-bottom:15px;">
+      <hr style="border:0; border-top: 1.5px solid #006b3f; margin:8px 0 10px 0;">
 
       <!-- DADOS DO DOCENTE -->
-      <div style="page-break-inside: avoid; background-color:#f9f9f9; padding:10px 12px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;">
-        <table style="width:100%; font-size:10.5px; border-collapse:collapse;">
+      <div style="background-color:#f9f9f9; padding:8px 10px; border:1px solid #ddd; border-radius:3px; margin-bottom:10px; page-break-inside: avoid;">
+        <table style="width:100%; font-size:9.5px; border-collapse:collapse;">
           <tr>
-            <td style="padding:3px 0; width:55%;"><strong>Docente:</strong> ${nomeDocente}</td>
-            <td style="padding:3px 0; width:45%;"><strong>SIAPE:</strong> ${siape}</td>
+            <td style="padding:2px 0; width:55%;"><strong>Docente:</strong> ${nomeDocente}</td>
+            <td style="padding:2px 0; width:45%;"><strong>SIAPE:</strong> ${siape}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><strong>Lotação:</strong> ${document.getElementById("lotacao")?.value || "---"}</td>
-            <td style="padding:3px 0;"><strong>Regime:</strong> ${document.getElementById("regime")?.value || "---"}</td>
+            <td style="padding:2px 0;"><strong>Lotação:</strong> ${document.getElementById("lotacao")?.value || "---"}</td>
+            <td style="padding:2px 0;"><strong>Regime:</strong> ${document.getElementById("regime")?.value || "---"}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><strong>Período Avaliado:</strong> ${document.getElementById("periodo_avaliacao")?.value || "---"}</td>
-            <td style="padding:3px 0;"><strong>Data Progressão:</strong> ${document.getElementById("data_progressao")?.value || "---"}</td>
+            <td style="padding:2px 0;"><strong>Período Avaliado:</strong> ${document.getElementById("periodo_avaliacao")?.value || "---"}</td>
+            <td style="padding:2px 0;"><strong>Data Progressão:</strong> ${document.getElementById("data_progressao")?.value || "---"}</td>
           </tr>
         </table>
       </div>
 
-      <!-- CORPO COM AS TABELAS DE GRUPOS -->
+      <!-- CORPO COM AS TABELAS -->
       ${tabelasGruposHtml}
 
       <!-- TOTAL GERAL E ASSINATURA -->
-      <div style="page-break-inside: avoid; margin-top:20px;">
-        <div style="padding:10px 15px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:4px; text-align:right; font-size:13px; color:#1b5e20;">
+      <div style="margin-top:15px; page-break-inside: avoid;">
+        <div style="padding:8px 12px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:3px; text-align:right; font-size:11px; color:#1b5e20;">
           <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral")?.innerText || "0.00"} PTS</strong>
         </div>
 
-        <div style="text-align:center; margin-top:45px;">
+        <div style="text-align:center; margin-top:35px;">
           <p style="margin:0;">____________________________________________________</p>
-          <p style="margin-top:4px; font-weight:bold; font-size:11px;">Assinatura do Docente</p>
+          <p style="margin-top:4px; font-weight:bold; font-size:10px;">Assinatura do Docente</p>
         </div>
       </div>
     `;
 
-    // Opções otimizadas do html2pdf para evitar quebras ruins e manter legibilidade
+    // Configurações do html2pdf com suporte a quebras de páginas suaves sem empurrar o topo
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [10, 10, 10, 10], // Margem superior/inferior/esquerda/direita em milímetros
       filename: `RID_OFICIAL_${siape}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
+      html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      pagebreak: { mode: ['css', 'legacy'] } // Removeu-se 'avoid-all' para permitir múltiplas páginas continuas
     };
 
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
@@ -430,6 +431,23 @@ async function gerarRIDOficialComBrasao() {
         }
       }
     }
+
+    const pdfBytes = await pdfFinal.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `RID_OFICIAL_${siape}.pdf`;
+    link.click();
+
+  } catch (err) {
+    alert("Erro ao gerar RID oficial: " + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID Oficial + Comprovantes PDF`;
+    }
+  }
+}
 
     const pdfBytes = await pdfFinal.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
