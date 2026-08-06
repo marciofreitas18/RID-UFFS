@@ -5,176 +5,231 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema RID - UFFS</title>
   
-  <!-- Bootstrap CSS -->
+  <!-- CSS Bootstrap e FontAwesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <!-- Tipografia e Paleta Oficial UFFS -->
+  <style>
+    :root {
+      --verde-uffs: #00693E;
+      --verde-uffs-escuro: #004D2D;
+      --verde-uffs-claro: #e8f5e9;
+    }
+    body {
+      background-color: #f4f6f7;
+      font-family: 'Fira Sans', Arial, sans-serif;
+    }
+    .uffs-header {
+      background-color: var(--verde-uffs-escuro);
+      color: #ffffff;
+      border-bottom: 4px solid var(--verde-uffs);
+    }
+    .card-header-uffs {
+      background-color: var(--verde-uffs);
+      color: white;
+      font-weight: bold;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: var(--verde-uffs) !important;
+      color: white !important;
+      border-color: var(--verde-uffs) !important;
+    }
+    .nav-tabs .nav-link {
+      color: var(--verde-uffs-escuro);
+      font-weight: 600;
+    }
+    .btn-uffs {
+      background-color: var(--verde-uffs);
+      color: white;
+      border: none;
+    }
+    .btn-uffs:hover {
+      background-color: var(--verde-uffs-escuro);
+      color: white;
+    }
+    .badge-pontos {
+      background-color: var(--verde-uffs-claro);
+      color: var(--verde-uffs-escuro);
+      border: 1px solid var(--verde-uffs);
+    }
+  </style>
 </head>
-<body class="bg-light p-4">
+<body class="p-3 p-md-4">
 
-  <div class="container bg-white p-4 shadow-sm rounded">
-    <h3 class="text-success mb-3">Relatório Individual Docente (RID) - UFFS</h3>
-
-    <!-- DADOS DOCENTE -->
-    <div class="card mb-4">
-      <div class="card-header bg-secondary text-white">Dados do Docente</div>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Nome Civil</label>
-            <input type="text" id="nome_civil" class="form-control" placeholder="Seu nome completo">
-          </div>
-          <div class="form-group col-md-3">
-            <label>SIAPE</label>
-            <input type="text" id="siape" class="form-control" placeholder="1234567">
-          </div>
-          <div class="form-group col-md-3">
-            <label>Lotação / Campus</label>
-            <input type="text" id="lotacao" class="form-control" placeholder="Ex: Campus Chapecó">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label>Regime de Trabalho</label>
-            <input type="text" id="regime" class="form-control" placeholder="Ex: Dedicação Exclusiva">
-          </div>
-          <div class="form-group col-md-4">
-            <label>Período de Avaliação</label>
-            <input type="text" id="periodo_avaliacao" class="form-control" placeholder="Ex: 2024/1 a 2025/2">
-          </div>
-          <div class="form-group col-md-4">
-            <label>Data de Progressão</label>
-            <input type="date" id="data_progressao" class="form-control">
-          </div>
-        </div>
-      </div>
+  <div class="container-fluid max-width-lg bg-white p-0 shadow-sm rounded overflow-hidden" style="max-width: 1100px;">
+    
+    <!-- Cabeçalho Institucional UFFS -->
+    <div class="uffs-header p-4 text-center">
+      <h4 class="m-0 font-weight-bold">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
+      <p class="m-0 mt-1 text-light small">Relatório Individual Docente (RID) — Resolução Nº 239/CONSUNI/UFFS/2026</p>
     </div>
 
-    <!-- ABAS OU SEÇÕES DE CATEGORIAS -->
-    <ul class="nav nav-tabs" id="ridTabs" role="tablist">
-      <li class="nav-item"><a class="nav-link active" id="tab-ensino" data-toggle="tab" href="#sec-ensino">1. Ensino</a></li>
-      <li class="nav-item"><a class="nav-link" id="tab-pesquisa" data-toggle="tab" href="#sec-pesquisa">2. Pesquisa</a></li>
-      <li class="nav-item"><a class="nav-link" id="tab-extensao" data-toggle="tab" href="#sec-extensao">3. Extensão</a></li>
-      <li class="nav-item"><a class="nav-link" id="tab-formacao" data-toggle="tab" href="#sec-formacao">4. Formação</a></li>
-      <li class="nav-item"><a class="nav-link" id="tab-gestao" data-toggle="tab" href="#sec-gestao">5. Gestão</a></li>
-    </ul>
-
-    <div class="tab-content border border-top-0 p-3 bg-white" id="ridTabsContent">
-      
-      <!-- SEÇÃO ENSINO -->
-      <div class="tab-pane fade show active" id="sec-ensino" role="tabpanel">
-        <h5 class="mt-2 text-success">Atividades de Ensino</h5>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-7">
-            <label>Selecione a atividade:</label>
-            <select id="select-ensino" class="form-control"></select>
+    <div class="p-4">
+      <!-- DADOS DO DOCENTE -->
+      <div class="card mb-4 border-light shadow-sm">
+        <div class="card-header card-header-uffs">
+          <i class="fas fa-user-id-card mr-2"></i>Dados do Docente
+        </div>
+        <div class="card-body bg-light">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label class="font-weight-bold small">Nome Civil</label>
+              <input type="text" id="nome_civil" class="form-control" placeholder="Seu nome completo">
+            </div>
+            <div class="form-group col-md-3">
+              <label class="font-weight-bold small">SIAPE</label>
+              <input type="text" id="siape" class="form-control" placeholder="1234567">
+            </div>
+            <div class="form-group col-md-3">
+              <label class="font-weight-bold small">Lotação / Campus</label>
+              <input type="text" id="lotacao" class="form-control" placeholder="Ex: Campus Chapecó">
+            </div>
           </div>
-          <div class="form-group col-md-3">
-            <label>Qtd / Horas:</label>
-            <input type="number" id="qtd-ensino" class="form-control" min="0.1" step="any" placeholder="Ex: 60">
-          </div>
-          <div class="form-group col-md-2">
-            <button class="btn btn-primary btn-block" onclick="adicionarAtividade('ensino')"><i class="fas fa-plus"></i> Adicionar</button>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label class="font-weight-bold small">Regime de Trabalho</label>
+              <input type="text" id="regime" class="form-control" placeholder="Ex: Dedicação Exclusiva">
+            </div>
+            <div class="form-group col-md-4">
+              <label class="font-weight-bold small">Período de Avaliação</label>
+              <input type="text" id="periodo_avaliacao" class="form-control" placeholder="Ex: 2024/1 a 2025/2">
+            </div>
+            <div class="form-group col-md-4">
+              <label class="font-weight-bold small">Data de Progressão</label>
+              <input type="date" id="data_progressao" class="form-control">
+            </div>
           </div>
         </div>
-        <div id="tabela-ensino"></div>
       </div>
 
-      <!-- SEÇÃO PESQUISA -->
-      <div class="tab-pane fade" id="sec-pesquisa" role="tabpanel">
-        <h5 class="mt-2 text-success">Atividades de Pesquisa</h5>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-7">
-            <label>Selecione a atividade:</label>
-            <select id="select-pesquisa" class="form-control"></select>
+      <!-- ABAS DE ATIVIDADES -->
+      <ul class="nav nav-tabs" id="ridTabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" id="tab-ensino" data-toggle="tab" href="#sec-ensino">1. Ensino</a></li>
+        <li class="nav-item"><a class="nav-link" id="tab-pesquisa" data-toggle="tab" href="#sec-pesquisa">2. Pesquisa</a></li>
+        <li class="nav-item"><a class="nav-link" id="tab-extensao" data-toggle="tab" href="#sec-extensao">3. Extensão</a></li>
+        <li class="nav-item"><a class="nav-link" id="tab-formacao" data-toggle="tab" href="#sec-formacao">4. Formação</a></li>
+        <li class="nav-item"><a class="nav-link" id="tab-gestao" data-toggle="tab" href="#sec-gestao">5. Gestão</a></li>
+      </ul>
+
+      <div class="tab-content border border-top-0 p-3 bg-white rounded-bottom" id="ridTabsContent">
+        
+        <!-- MACRO GERADORA DAS SEÇÕES -->
+        <!-- ENSINO -->
+        <div class="tab-pane fade show active" id="sec-ensino" role="tabpanel">
+          <h6 class="mt-2 text-success font-weight-bold">Atividades de Ensino</h6>
+          <div class="form-row align-items-end">
+            <div class="form-group col-md-7">
+              <label class="small">Selecione a atividade:</label>
+              <select id="select-ensino" class="form-control"></select>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="small">Qtd / Horas:</label>
+              <input type="number" id="qtd-ensino" class="form-control" min="0.1" step="any" placeholder="Ex: 60">
+            </div>
+            <div class="form-group col-md-2">
+              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('ensino')"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
           </div>
-          <div class="form-group col-md-3">
-            <label>Qtd / Horas:</label>
-            <input type="number" id="qtd-pesquisa" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-          </div>
-          <div class="form-group col-md-2">
-            <button class="btn btn-primary btn-block" onclick="adicionarAtividade('pesquisa')"><i class="fas fa-plus"></i> Adicionar</button>
-          </div>
+          <div id="tabela-ensino"></div>
         </div>
-        <div id="tabela-pesquisa"></div>
+
+        <!-- PESQUISA -->
+        <div class="tab-pane fade" id="sec-pesquisa" role="tabpanel">
+          <h6 class="mt-2 text-success font-weight-bold">Atividades de Pesquisa</h6>
+          <div class="form-row align-items-end">
+            <div class="form-group col-md-7">
+              <label class="small">Selecione a atividade:</label>
+              <select id="select-pesquisa" class="form-control"></select>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="small">Qtd / Horas:</label>
+              <input type="number" id="qtd-pesquisa" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+            </div>
+            <div class="form-group col-md-2">
+              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('pesquisa')"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
+          </div>
+          <div id="tabela-pesquisa"></div>
+        </div>
+
+        <!-- EXTENSÃO -->
+        <div class="tab-pane fade" id="sec-extensao" role="tabpanel">
+          <h6 class="mt-2 text-success font-weight-bold">Atividades de Extensão</h6>
+          <div class="form-row align-items-end">
+            <div class="form-group col-md-7">
+              <label class="small">Selecione a atividade:</label>
+              <select id="select-extensao" class="form-control"></select>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="small">Qtd / Horas:</label>
+              <input type="number" id="qtd-extensao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+            </div>
+            <div class="form-group col-md-2">
+              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('extensao')"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
+          </div>
+          <div id="tabela-extensao"></div>
+        </div>
+
+        <!-- FORMAÇÃO -->
+        <div class="tab-pane fade" id="sec-formacao" role="tabpanel">
+          <h6 class="mt-2 text-success font-weight-bold">Atividades de Formação</h6>
+          <div class="form-row align-items-end">
+            <div class="form-group col-md-7">
+              <label class="small">Selecione a atividade:</label>
+              <select id="select-formacao" class="form-control"></select>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="small">Qtd / Horas:</label>
+              <input type="number" id="qtd-formacao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+            </div>
+            <div class="form-group col-md-2">
+              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('formacao')"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
+          </div>
+          <div id="tabela-formacao"></div>
+        </div>
+
+        <!-- GESTÃO -->
+        <div class="tab-pane fade" id="sec-gestao" role="tabpanel">
+          <h6 class="mt-2 text-success font-weight-bold">Atividades de Gestão</h6>
+          <div class="form-row align-items-end">
+            <div class="form-group col-md-7">
+              <label class="small">Selecione a atividade:</label>
+              <select id="select-gestao" class="form-control"></select>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="small">Qtd / Horas:</label>
+              <input type="number" id="qtd-gestao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
+            </div>
+            <div class="form-group col-md-2">
+              <button class="btn btn-uffs btn-block" onclick="adicionarAtividade('gestao')"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
+          </div>
+          <div id="tabela-gestao"></div>
+        </div>
+
       </div>
 
-      <!-- SEÇÃO EXTENSÃO -->
-      <div class="tab-pane fade" id="sec-extensao" role="tabpanel">
-        <h5 class="mt-2 text-success">Atividades de Extensão</h5>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-7">
-            <label>Selecione a atividade:</label>
-            <select id="select-extensao" class="form-control"></select>
-          </div>
-          <div class="form-group col-md-3">
-            <label>Qtd / Horas:</label>
-            <input type="number" id="qtd-extensao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-          </div>
-          <div class="form-group col-md-2">
-            <button class="btn btn-primary btn-block" onclick="adicionarAtividade('extensao')"><i class="fas fa-plus"></i> Adicionar</button>
-          </div>
-        </div>
-        <div id="tabela-extensao"></div>
-      </div>
-
-      <!-- SEÇÃO FORMAÇÃO -->
-      <div class="tab-pane fade" id="sec-formacao" role="tabpanel">
-        <h5 class="mt-2 text-success">Atividades de Formação</h5>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-7">
-            <label>Selecione a atividade:</label>
-            <select id="select-formacao" class="form-control"></select>
-          </div>
-          <div class="form-group col-md-3">
-            <label>Qtd / Horas:</label>
-            <input type="number" id="qtd-formacao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-          </div>
-          <div class="form-group col-md-2">
-            <button class="btn btn-primary btn-block" onclick="adicionarAtividade('formacao')"><i class="fas fa-plus"></i> Adicionar</button>
-          </div>
-        </div>
-        <div id="tabela-formacao"></div>
-      </div>
-
-      <!-- SEÇÃO GESTÃO -->
-      <div class="tab-pane fade" id="sec-gestao" role="tabpanel">
-        <h5 class="mt-2 text-success">Atividades de Administração e Gestão</h5>
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-7">
-            <label>Selecione a atividade:</label>
-            <select id="select-gestao" class="form-control"></select>
-          </div>
-          <div class="form-group col-md-3">
-            <label>Qtd / Horas:</label>
-            <input type="number" id="qtd-gestao" class="form-control" min="0.1" step="any" placeholder="Ex: 1">
-          </div>
-          <div class="form-group col-md-2">
-            <button class="btn btn-primary btn-block" onclick="adicionarAtividade('gestao')"><i class="fas fa-plus"></i> Adicionar</button>
-          </div>
-        </div>
-        <div id="tabela-gestao"></div>
+      <!-- PAINEL DE PONTUAÇÃO E BOTÃO DE PDF -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 p-3 badge-pontos rounded">
+        <h5 class="m-0 mb-2 mb-md-0 font-weight-bold">Pontuação Total Final: <span id="pontuacao-total-geral" class="text-success">0.00</span> pts</h5>
+        <button id="btn-gerar-pdf" class="btn btn-uffs btn-lg shadow-sm" onclick="gerarRIDOficialComBrasao()">
+          <i class="fas fa-file-pdf mr-2"></i>Gerar RID Oficial + Comprovantes PDF
+        </button>
       </div>
 
     </div>
-
-    <!-- PONTUAÇÃO E BOTÃO PDF -->
-    <div class="d-flex justify-content-between align-items-center mt-4 p-3 bg-light border rounded">
-      <h4>Pontuação Total: <span id="pontuacao-total-geral" class="text-success font-weight-bold">0.00</span> pts</h4>
-      <button id="btn-gerar-pdf" class="btn btn-success btn-lg" onclick="gerarRIDOficialComBrasao()">
-        <i class="fas fa-file-pdf"></i> Gerar RID Oficial + Comprovantes PDF
-      </button>
-    </div>
-
   </div>
 
-  <!-- BIBLIOTECAS JS (JQuery, Bootstrap, PDF-Lib e HTML2PDF) -->
+  <!-- BIBLIOTECAS VITALÍCIAS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- SEU ARQUIVO JAVASCRIPT -->
+  <!-- ARQUIVO DE SCRIPT -->
   <script src="script.js"></script>
 </body>
 </html>
