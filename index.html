@@ -60,7 +60,7 @@
     <!-- CABEÇALHO INSTITUCIONAL -->
     <div class="uffs-header p-4 text-center">
       <h4 class="m-0 font-weight-bold">UNIVERSIDADE FEDERAL DA FRONTEIRA SUL - UFFS</h4>
-      <p class="m-0 mt-1 text-light small">Relatório Individual Docente (RID)</p>
+      <p class="m-0 mt-1 text-light small">Relatório Individual Docente (RID) — Resolução Nº 239/CONSUNI/UFFS/2026</p>
     </div>
 
     <div class="p-4">
@@ -272,6 +272,9 @@
     </div>
   </div>
 
+  <!-- CONTAINER DE IMPRESSÃO VISÍVEL APENAS NA GERACAO DO PDF -->
+  <div id="rid-impressao-container" style="display: none; background: #fff; width: 750px; padding: 20px; font-family: Arial, sans-serif; font-size: 10px; color: #333;"></div>
+
   <!-- BIBLIOTECAS JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -475,7 +478,7 @@
         btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Processando PDF...`;
       }
 
-      let ridElement = null;
+      const containerImpressao = document.getElementById("rid-impressao-container");
 
       try {
         const { PDFDocument } = PDFLib;
@@ -507,21 +510,6 @@
 
           itensComPagina.push({ ...item, paginaInfo: paginaInicio });
         }
-
-        // Criamos o container visível momentaneamente para renderização completa sem telas brancas
-        ridElement = document.createElement("div");
-        ridElement.style.position = "absolute";
-        ridElement.style.left = "0";
-        ridElement.style.top = "0";
-        ridElement.style.width = "750px";
-        ridElement.style.padding = "20px";
-        ridElement.style.margin = "0 auto";
-        ridElement.style.boxSizing = "border-box";
-        ridElement.style.fontFamily = "Arial, sans-serif";
-        ridElement.style.fontSize = "10px";
-        ridElement.style.color = "#333";
-        ridElement.style.backgroundColor = "#fff";
-        ridElement.style.zIndex = "-9999";
 
         const gruposOficiais = [
           { key: "ensino", titulo: "1. ATIVIDADES DE ENSINO" },
@@ -586,16 +574,15 @@
           tabelasGruposHtml += `</div>`;
         });
 
-        // Utilização de um SVG inline vetorial do Brasão para evitar bloqueio de arquivos locais
         const brasaoSvg = `
-          <svg width="50" height="50" viewBox="0 0 100 100" style="margin: 0 auto 5px auto; display: block;">
+          <svg width="45" height="45" viewBox="0 0 100 100" style="margin: 0 auto 5px auto; display: block;">
             <circle cx="50" cy="50" r="45" fill="#00693E" />
             <polygon points="50,15 61,38 85,38 66,52 73,76 50,60 27,76 34,52 15,38 39,38" fill="#FFCC00" />
             <circle cx="50" cy="50" r="12" fill="#002776" />
           </svg>
         `;
 
-        ridElement.innerHTML = `
+        containerImpressao.innerHTML = `
           <div style="text-align:center; margin:0 0 10px 0; padding:0;">
             ${brasaoSvg}
             <h3 style="margin:0; color:#004D2D; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.2;">República Federativa do Brasil</h3>
@@ -636,18 +623,23 @@
           </div>
         `;
 
-        document.body.appendChild(ridElement);
+        // Torna o container visível momentaneamente para a captura
+        containerImpressao.style.display = "block";
 
         const opt = {
           margin: [8, 8, 8, 8],
           filename: `RID_OFICIAL_${siape}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
           pagebreak: { mode: ['css', 'legacy'] }
         };
 
-        const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
+        const ridBuffer = await html2pdf().set(opt).from(containerImpressao).outputPdf('arraybuffer');
+        
+        // Esconde novamente após a renderização
+        containerImpressao.style.display = "none";
+
         const pdfRIDDoc = await PDFDocument.load(ridBuffer);
         const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
         paginasRID.forEach(p => pdfFinal.addPage(p));
@@ -675,9 +667,7 @@
       } catch (err) {
         alert("Erro ao gerar RID oficial: " + err.message);
       } finally {
-        if (ridElement && ridElement.parentNode) {
-          ridElement.parentNode.removeChild(ridElement);
-        }
+        containerImpressao.style.display = "none";
         if (btn) {
           btn.disabled = false;
           btn.innerHTML = `<i class="fas fa-file-pdf mr-2"></i>Gerar RID Oficial + Comprovantes PDF`;
