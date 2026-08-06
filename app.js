@@ -163,7 +163,6 @@ function renderizarTodasAsTabelas() {
   ["ensino", "pesquisa", "extensao", "formacao", "gestao"].forEach(cat => renderizarTabelaCategoria(cat));
 }
 
-// Função para comparar códigos numéricos (ex: "1.1.1." vs "1.2.1.")
 function compararCodigos(codA, codB) {
   const a = codA.replace(/\.$/, '').split('.').map(Number);
   const b = codB.replace(/\.$/, '').split('.').map(Number);
@@ -180,7 +179,6 @@ function renderizarTabelaCategoria(cat) {
   const container = document.getElementById(`tabela-${cat}`);
   if (!container) return;
 
-  // Filtra e ordena automaticamente pelo código numérico
   const itens = atividadesSelecionadas
     .filter(i => i.cat === cat)
     .sort((a, b) => compararCodigos(a.cod, b.cod));
@@ -281,10 +279,8 @@ async function gerarRIDOficialComBrasao() {
       itensComPagina.push({ ...item, paginaInfo: paginaInicio });
     }
 
-    // Div temporária para renderização do HTML
     const ridElement = document.createElement("div");
     
-    // Zera margens iniciais e ajusta para dimensões exatas de A4
     ridElement.style.width = "750px";
     ridElement.style.padding = "0px";
     ridElement.style.margin = "0px";
@@ -358,7 +354,6 @@ async function gerarRIDOficialComBrasao() {
     });
 
     ridElement.innerHTML = `
-      <!-- CABEÇALHO COM PADDING ZERO NO TOPO -->
       <div style="text-align:center; margin:0 0 10px 0; padding:0;">
         <img src="brasaodarepublica.png" style="width:55px; height:auto; margin:0 auto 4px auto; display:block;" alt="Brasão da República">
         <h3 style="margin:0; color:#004d2d; font-size:12px; font-weight:bold; text-transform:uppercase; line-height:1.2;">República Federativa do Brasil</h3>
@@ -368,7 +363,6 @@ async function gerarRIDOficialComBrasao() {
 
       <hr style="border:0; border-top: 1.5px solid #006b3f; margin:8px 0 10px 0;">
 
-      <!-- DADOS DO DOCENTE -->
       <div style="background-color:#f9f9f9; padding:8px 10px; border:1px solid #ddd; border-radius:3px; margin-bottom:10px; page-break-inside: avoid;">
         <table style="width:100%; font-size:9.5px; border-collapse:collapse;">
           <tr>
@@ -386,10 +380,8 @@ async function gerarRIDOficialComBrasao() {
         </table>
       </div>
 
-      <!-- CORPO COM AS TABELAS -->
       ${tabelasGruposHtml}
 
-      <!-- TOTAL GERAL E ASSINATURA -->
       <div style="margin-top:15px; page-break-inside: avoid;">
         <div style="padding:8px 12px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:3px; text-align:right; font-size:11px; color:#1b5e20;">
           <strong>PONTUAÇÃO TOTAL FINAL: ${document.getElementById("pontuacao-total-geral")?.innerText || "0.00"} PTS</strong>
@@ -402,14 +394,13 @@ async function gerarRIDOficialComBrasao() {
       </div>
     `;
 
-    // Configurações do html2pdf com suporte a quebras de páginas suaves sem empurrar o topo
     const opt = {
-      margin: [10, 10, 10, 10], // Margem superior/inferior/esquerda/direita em milímetros
+      margin: [10, 10, 10, 10],
       filename: `RID_OFICIAL_${siape}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] } // Removeu-se 'avoid-all' para permitir múltiplas páginas continuas
+      pagebreak: { mode: ['css', 'legacy'] }
     };
 
     const ridBuffer = await html2pdf().set(opt).from(ridElement).outputPdf('arraybuffer');
@@ -418,7 +409,6 @@ async function gerarRIDOficialComBrasao() {
     const paginasRID = await pdfFinal.copyPages(pdfRIDDoc, pdfRIDDoc.getPageIndices());
     paginasRID.forEach(p => pdfFinal.addPage(p));
 
-    // Anexação dos comprovantes mantendo a ordem
     for (const item of atividadesOrdenadas) {
       if (item.arquivoPDF) {
         const fileBuffer = await item.arquivoPDF.arrayBuffer();
@@ -431,23 +421,6 @@ async function gerarRIDOficialComBrasao() {
         }
       }
     }
-
-    const pdfBytes = await pdfFinal.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `RID_OFICIAL_${siape}.pdf`;
-    link.click();
-
-  } catch (err) {
-    alert("Erro ao gerar RID oficial: " + err.message);
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = `<i class="fas fa-file-pdf"></i> Gerar RID Oficial + Comprovantes PDF`;
-    }
-  }
-}
 
     const pdfBytes = await pdfFinal.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
