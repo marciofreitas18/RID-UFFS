@@ -72,6 +72,152 @@ const catalogoRID = [
   { id: "5_1_13", cod: "5.1.13.", desc: "Membro do CONSUNI ou CÂMARAS FONTES", fator: 5.0, unit: "pontos/semestre", cat: "gestao" }
 ];
 
+
+const formasAfericaoRID = {
+  "1.1.1": "Carga horária ministrada na graduação no período de avaliação.",
+  "1.1.2": "Carga horária ministrada na pós-graduação no período de avaliação.",
+  "1.2.1": "Número de semestres no período avaliado em que foi membro titular de colegiado de curso.",
+  "1.2.2": "Número de semestres no período avaliado em que foi membro suplente de colegiado de curso.",
+  "1.2.3": "Número de semestres no período avaliado em que foi membro do NDE de curso.",
+  "1.2.4": "Número de semestres no período avaliado em que foi membro de fóruns de ensino.",
+  "1.2.5": "Número de semestres no período avaliado em que foi membro de outras comissões ligadas ao ensino.",
+  "1.2.6": "Número de semestres no período avaliado em que foi coordenador de estágios do curso.",
+  "1.3.1": "Número de TCCs orientados no período avaliado.",
+  "1.3.2": "Número de residências orientadas no período avaliado.",
+  "1.3.3": "Número de TCCs coorientados no período avaliado.",
+  "1.3.4": "Número de estagiários obrigatórios orientados no período avaliado.",
+  "1.3.5": "Número de estagiários não obrigatórios orientados no período avaliado.",
+  "1.3.6": "Número de projetos de monitoria orientados no período avaliado.",
+  "1.3.7": "Número de semestres no período avaliado em que tutoriou Grupo PET ou PIBID.",
+  "1.3.8": "Número de monografias de especialização orientadas no período avaliado.",
+  "1.3.9": "Número de bancas em que participou no período avaliado.",
+  "1.3.10": "Número de bancas de livre-docência em que participou no período avaliado.",
+  "1.3.11": "Número de bancas para Professor Titular da carreira EBTT em que participou no período avaliado.",
+  "1.3.12": "Número de bancas de contratação de professor substituto em que participou no período avaliado.",
+  "1.3.13": "Número de bancas de concurso público para a Carreira do Magistério Superior em que participou no período avaliado.",
+  "1.3.14": "Somatório do número de projetos/grupos de ensino coordenados nos semestres do período avaliado.",
+  "1.3.15": "Somatório do número de colaborações em projetos/grupos de ensino nos semestres do período avaliado.",
+  "1.4.1": "Número de palestras ministradas no período avaliado.",
+  "1.4.2": "Número de minicursos ministrados no período avaliado.",
+  "1.4.3": "Número de oficinas ministradas no período avaliado.",
+
+  "2.1.1": "Somatório do número de projetos coordenados nos semestres do período avaliado.",
+  "2.1.2": "Somatório do número de projetos coordenados nos semestres do período avaliado.",
+  "2.1.3": "Número de semestres no período avaliado em que coordenou grupo de pesquisa.",
+  "2.1.4": "Somatório do número de projetos em que colaborou nos semestres do período avaliado.",
+  "2.1.5": "Número de semestres no período avaliado em que permaneceu como bolsista.",
+
+  "2.2.1": "Número de dissertações orientadas no período avaliado.",
+  "2.2.2": "Número de teses orientadas no período avaliado.",
+  "2.2.3": "Somatório do número de supervisionados nos semestres do período avaliado.",
+  "2.2.4": "Somatório do número de orientados nos semestres do período avaliado.",
+  "2.2.5": "Número de coorientações de mestrado no período avaliado.",
+  "2.2.6": "Número de coorientações de doutorado no período avaliado.",
+
+  "2.3.1": "Número de artigos Qualis A publicados no período avaliado.",
+  "2.3.2": "Número de artigos Qualis B publicados no período avaliado.",
+  "2.3.3": "Número de artigos Qualis C publicados no período avaliado.",
+  "2.3.4": "Número de outros artigos publicados no período avaliado.",
+  "2.3.5": "Número de textos publicados no período avaliado.",
+  "2.3.6": "Número de livros publicados no período avaliado.",
+  "2.3.7": "Número de capítulos publicados no período avaliado.",
+  "2.3.8": "Número de trabalhos completos publicados no período avaliado.",
+  "2.3.9": "Número de resumos expandidos publicados no período avaliado.",
+  "2.3.10": "Número de resumos publicados no período avaliado.",
+  "2.3.11": "Número de apresentações orais no período avaliado.",
+  "2.3.12": "Número de apresentações de pôster no período avaliado.",
+
+  "2.4.1": "Número de semestres no período avaliado em que foi editor.",
+  "2.4.2": "Número de semestres no período avaliado em que foi editor de seção.",
+  "2.4.3": "Número de anais de eventos editados no período avaliado.",
+  "2.4.4": "Número de números especiais ou dossiês de periódico editados no período avaliado.",
+  "2.4.5": "Número de semestres no período avaliado em que integrou conselho editorial de editora.",
+  "2.4.6": "Número de semestres no período avaliado em que integrou conselho editorial de periódico.",
+  "2.4.7": "Número de eventos em que participou como membro de comitê científico no período avaliado.",
+  "2.4.8": "Somatório da participação em comitês nos semestres do período avaliado.",
+  "2.4.9": "Somatório da participação em comitês nos semestres do período avaliado.",
+  "2.4.10": "Número de revisões realizadas no período avaliado.",
+  "2.4.11": "Número de avaliações de projetos realizadas no período avaliado.",
+
+  "2.5.1": "Número de bancas de mestrado em que participou no período avaliado.",
+  "2.5.2": "Número de bancas de qualificação em que participou no período avaliado.",
+  "2.5.3": "Número de bancas de doutorado em que participou no período avaliado.",
+  "2.5.4": "Número de comissões de seleção em que participou no período avaliado.",
+
+  "2.6.1": "Número de livros traduzidos no período avaliado.",
+  "2.6.2": "Número de capítulos traduzidos no período avaliado.",
+  "2.6.3": "Número de artigos traduzidos no período avaliado.",
+  "2.6.4": "Número de patentes registradas no período avaliado.",
+  "2.6.5": "Número de patentes concedidas no período avaliado.",
+  "2.6.6": "Número de produções técnicas no período avaliado.",
+
+  "3.1.1": "Somatório do número de programas coordenados nos semestres do período avaliado.",
+  "3.1.2": "Número de semestres no período avaliado em que exerceu a vice-coordenação.",
+  "3.1.3": "Somatório do número de projetos coordenados nos semestres do período avaliado.",
+  "3.1.4": "Somatório do número de cursos ou eventos coordenados nos semestres do período avaliado.",
+  "3.1.5": "Somatório do número de ações em que colaborou nos semestres do período avaliado.",
+  "3.1.6": "Somatório do número de ações coordenadas nos semestres do período avaliado.",
+  "3.1.7": "Número de semestres no período avaliado em que coordenou núcleo de estudos.",
+
+  "3.2.1": "Número de semestres no período avaliado em que exerceu a função.",
+  "3.2.2": "Número de semestres no período avaliado em que exerceu a função.",
+  "3.2.3": "Somatório da participação em comitês nos semestres do período avaliado.",
+  "3.2.4": "Somatório da participação em comitês nos semestres do período avaliado.",
+  "3.2.5": "Somatório da participação em comissões nos semestres do período avaliado.",
+  "3.2.6": "Número de semestres no período avaliado em que integrou o conselho editorial.",
+  "3.2.7": "Número de revisões realizadas no período avaliado.",
+  "3.2.8": "Número de editais em que atuou como avaliador no período avaliado.",
+  "3.2.9": "Número de avaliações realizadas no período avaliado.",
+
+  "3.3.1": "Somatório do número de produtos nos semestres do período avaliado.",
+
+  "3.4.1": "Somatório do número de orientados nos semestres do período avaliado.",
+  "3.4.2": "Somatório do número de orientados nos semestres do período avaliado.",
+  "3.4.3": "Somatório do número de orientados nos semestres do período avaliado.",
+  "3.4.4": "Somatório do número de orientados nos semestres do período avaliado.",
+
+  "4.1.1": "Número de semestres no período avaliado.",
+  "4.1.2": "Número de semestres no período avaliado.",
+  "4.1.3": "Número de semestres no período avaliado.",
+  "4.1.4": "Número de semestres no período avaliado.",
+  "4.1.5": "Número de semestres no período avaliado.",
+  "4.1.6": "Número de participações no período avaliado (máximo de 6 formações).",
+  "4.1.7": "Número de participações no período avaliado (máximo de 10 palestras).",
+  "4.1.8": "Número de participações no período avaliado (máximo de 10 seminários).",
+  "4.1.9": "Número de participações no período avaliado (máximo de 10 cursos).",
+
+  "5.1.1": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.2": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.3": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.4": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.5": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.6": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.7": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.8": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.9": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.10": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.11": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.12": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.13": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.14": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.15": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.16": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.17": "Número de participações no período avaliado.",
+  "5.1.18": "Número de participações no período avaliado.",
+  "5.1.19": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.20": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.21": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.22": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.23": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.24": "Número de semestres no período avaliado em que exerceu a função.",
+  "5.1.25": "Somatório do número de laboratórios em que colaborou nos semestres do período avaliado."
+};
+
+function obterFormaAfericao(item) {
+  return formasAfericaoRID[item.cod] || "Consulte a forma de aferição prevista no Anexo II da Resolução nº 239/CONSUNI/UFFS/2026.";
+}
+
+
 let atividadesSelecionadas = [];
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -79,20 +225,58 @@ document.addEventListener("DOMContentLoaded", function() {
   renderizarTodasAsTabelas();
 });
 
+
 function popularTodosOsSelects() {
-  const categorias = ["ensino", "pesquisa", "extensao", "formacao", "gestao"];
-  categorias.forEach(cat => {
+  categoriasRID.forEach(categoria => {
+    const cat = categoria.id;
     const select = document.getElementById(`select-${cat}`);
-    if (select) {
-      const itensCat = catalogoRID.filter(i => i.cat === cat);
-      let optionsHTML = `<option value="">-- Selecione uma atividade --</option>`;
-      itensCat.forEach(item => {
-        optionsHTML += `<option value="${item.id}">[${item.cod}] ${item.desc} (${item.fator} ${item.unit})</option>`;
-      });
-      select.innerHTML = optionsHTML;
+    if (!select) return;
+
+    select.innerHTML =
+      `<option value="">-- Selecione uma atividade --</option>` +
+      catalogoRID
+        .filter(item => item.cat === cat)
+        .map(item =>
+          `<option value="${item.id}">[${item.cod}] ${esc(item.desc)} (${item.fator} ${esc(item.unit)})</option>`
+        )
+        .join("");
+
+    let orientacao = document.getElementById(`afericao-${cat}`);
+
+    if (!orientacao) {
+      orientacao = document.createElement("div");
+      orientacao.id = `afericao-${cat}`;
+      orientacao.className = "small mt-2 mb-2";
+      orientacao.style.cssText =
+        "display:none;background:#f0f7f2;border-left:4px solid #008037;padding:10px;border-radius:4px;";
+
+      select.insertAdjacentElement("afterend", orientacao);
     }
+
+    // Substitui o evento anterior, se houver, sem acumular listeners.
+    select.onchange = function () {
+      const item = catalogoRID.find(i => i.id === select.value);
+
+      if (!item) {
+        orientacao.style.display = "none";
+        orientacao.innerHTML = "";
+        return;
+      }
+
+      orientacao.innerHTML = `
+        <strong>Fator de pontuação:</strong>
+        ${item.fator} ${esc(item.unit)}
+        <div class="mt-1">
+          <strong>Forma de aferição:</strong>
+          ${esc(obterFormaAfericao(item))}
+        </div>
+      `;
+
+      orientacao.style.display = "block";
+    };
   });
 }
+
 
 function adicionarAtividade(cat) {
   const select = document.getElementById(`select-${cat}`);
@@ -209,7 +393,26 @@ function renderizarTabelaCategoria(cat) {
     let pontos = item.calc === "horas" ? (item.qtd / 15.0) * item.fator : item.qtd * item.fator;
     html += `
       <tr>
-        <td><small><strong>${item.cod}</strong> ${item.desc}</small></td>
+        <td>
+  <div>
+    <small>
+      <strong>${esc(item.cod)}</strong>
+      ${esc(item.desc)}
+    </small>
+  </div>
+
+  <div style="
+    margin-top:6px;
+    padding:6px 8px;
+    background:#f0f7f2;
+    border-left:3px solid #008037;
+    border-radius:3px;
+    font-size:11px;
+  ">
+    <strong>Forma de aferição:</strong>
+    ${esc(obterFormaAfericao(item))}
+  </div>
+</td>
         <td><small class="text-muted">${item.fator} ${item.unit}</small></td>
         <td><strong>${item.qtd}</strong></td>
         <td><span class="font-weight-bold text-success">${pontos.toFixed(2)}</span></td>
